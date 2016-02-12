@@ -30,9 +30,10 @@ use overload (
 use Class::Accessor::Lite ro => [qw/time_zone locale formatter/];
 
 my $_DEFAULT_LOCALE = DateTime::Locale->load('en_US');
+my $_DEFAULT_TIME_ZONE = DateTime::TimeZone->new(name => 'floating');
 sub _default_locale { $_DEFAULT_LOCALE }
 sub _default_formatter { undef }
-sub _default_time_zone { 'floating' }
+sub _default_time_zone { $_DEFAULT_TIME_ZONE }
 
 sub _inflate_locale {
     my ($class, $locale) = @_;
