@@ -1,10 +1,10 @@
 requires 'Class::Accessor::Lite';
 requires 'Class::Inspector';
+requires 'Data::Util';
 requires 'DateTime::Locale';
 requires 'DateTime::TimeZone';
 requires 'List::Util';
 requires 'Scalar::Util';
-requires 'Sub::Args';
 requires 'Time::Moment';
 requires 'perl', '5.008001';
 
@@ -15,9 +15,11 @@ on configure => sub {
 };
 
 on test => sub {
-    requires 'DateTime::LeapSecond';
     requires 'Test::Fatal';
     requires 'Test::More', '0.98';
     requires 'Test::Warnings', '0.005';
-    requires 'Try::Tiny';
+};
+
+on develop => sub {
+    requires 'feature';
 };

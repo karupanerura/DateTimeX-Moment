@@ -2,7 +2,7 @@ package DateTime::Moment::Duration;
 use strict;
 use warnings;
 
-use Sub::Args qw/args/;
+use Carp;
 use List::Util qw/first/;
 use Scalar::Util qw/blessed/;
 
@@ -25,23 +25,23 @@ sub isa {
 
 sub new {
     my $class = shift;
-    my $args  = args({
-        years       => 0,
-        months      => 0,
-        weeks       => 0,
-        days        => 0,
-        hours       => 0,
-        minutes     => 0,
-        seconds     => 0,
-        nanoseconds => 0,
-    } => @_);
-    defined $args->{$_} or $args->{$_} = 0 for keys %$args;
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
+
+    my %params;
+    for my $key (qw/years months weeks days hours minutes seconds nanoseconds/) {
+        $params{$key} = exists $args{$key} ? delete $args{$key} : 0;
+    }
+    if (%args) {
+        my $msg = 'Invalid args: '.join ',', keys %args;
+        Carp::croak $msg;
+    }
+
     my $self = bless {
-        months      => $args->{months} + $args->{years} * 12,
-        days        => $args->{days} + $args->{weeks} * 7,
-        minutes     => $args->{minutes} + $args->{hours} * 60,
-        seconds     => $args->{seconds},
-        nanoseconds => $args->{nanoseconds},
+        months      => $params{months} + $params{years} * 12,
+        days        => $params{days} + $params{weeks} * 7,
+        minutes     => $params{minutes} + $params{hours} * 60,
+        seconds     => $params{seconds},
+        nanoseconds => $params{nanoseconds},
     } => $class;
     return $self->_normalize_nanoseconds();
 }

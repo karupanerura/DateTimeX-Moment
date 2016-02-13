@@ -10,8 +10,6 @@ use DateTime::Moment::Duration;
 use DateTime::Locale;
 use DateTime::TimeZone;
 use Scalar::Util qw/blessed/;
-use List::Util qw/first/;
-use Sub::Args qw/args args_pos/;
 use Carp ();
 use POSIX qw/floor/;
 use Class::Inspector;
@@ -29,30 +27,41 @@ use overload (
 
 use Class::Accessor::Lite ro => [qw/time_zone locale formatter/];
 
+BEGIN {
+    local $@;
+    if (eval { require Data::Util; 1 }) {
+        *is_instance = \&Data::Util::is_instance;
+    }
+    else {
+        *is_instance = sub { blessed($_[0]) && $_[0]->isa($_[1]) };
+    }
+}
+
 my $_DEFAULT_LOCALE = DateTime::Locale->load('en_US');
-my $_DEFAULT_TIME_ZONE = DateTime::TimeZone->new(name => 'floating');
+my $_FLOATING_TIME_ZONE = DateTime::TimeZone->new(name => 'floating');
+my $_UTC_TIME_ZONE = DateTime::TimeZone->new(name => 'UTC');
 sub _default_locale { $_DEFAULT_LOCALE }
 sub _default_formatter { undef }
-sub _default_time_zone { $_DEFAULT_TIME_ZONE }
+sub _default_time_zone { $_FLOATING_TIME_ZONE }
 
 sub _inflate_locale {
     my ($class, $locale) = @_;
     return $class->_default_locale unless defined $locale;
-    return $locale if blessed $locale && ($locale->isa('DateTime::Locale::Base') || $locale->isa('DateTime::Locale::FromData'));
+    return $locale if _isa_locale($locale);
     return DateTime::Locale->load($locale);
 }
 
 sub _inflate_formatter {
     my ($class, $formatter) = @_;
     return $class->_default_formatter unless defined $formatter;
-    return $formatter if _isa_invocant($formatter) && $formatter->can('format_datetime');
+    return $formatter if _isa_formatter($formatter);
     Carp::croak 'formatter should can format_datetime.';
 }
 
 sub _inflate_time_zone {
     my ($class, $time_zone) = @_;
     return $class->_default_time_zone unless defined $time_zone;
-    return $time_zone if blessed $time_zone && $time_zone->isa('DateTime::TimeZone');
+    return $time_zone if _isa_time_zone($time_zone);
     return DateTime::TimeZone->new(name => $time_zone);
 }
 
@@ -64,30 +73,17 @@ sub isa {
 
 sub new {
     my $class = shift;
-    my $args = args({
-        year       => 1,
-        month      => 0,
-        day        => 0,
-        hour       => 0,
-        minute     => 0,
-        second     => 0,
-        nanosecond => 0,
-        language   => 0,
-        locale     => 0,
-        formatter  => 0,
-        time_zone  => 0,
-    } => @_);
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
-    $args->{locale} = delete $args->{language} if defined $args->{language};
-    my $locale    = delete $args->{locale}    || $class->_default_locale;
-    my $formatter = delete $args->{formatter} || $class->_default_formatter;
-    my $time_zone = delete $args->{time_zone} || $class->_default_time_zone;
-    defined $args->{$_} or delete $args->{$_} for keys %$args;
+    $args{locale} = delete $args{language} if exists $args{language};
+    my $locale    = delete $args{locale}    || $class->_default_locale;
+    my $formatter = delete $args{formatter} || $class->_default_formatter;
+    my $time_zone = delete $args{time_zone} || $class->_default_time_zone;
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
 
     my $self = bless {
-        _moment   => Time::Moment->new(%$args),
+        _moment   => Time::Moment->new(%args),
         locale    => $class->_inflate_locale($locale),
         formatter => $class->_inflate_formatter($formatter),
         time_zone => $class->_inflate_time_zone($time_zone),
@@ -97,17 +93,16 @@ sub new {
 
 sub now {
     my $class = shift;
-    my $args = args({
-        language   => 0,
-        locale     => 0,
-        formatter  => 0,
-        time_zone  => 0,
-    } => @_);
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
-    $args->{locale} = $args->{language} if defined $args->{language};
-    my $locale    = $args->{locale}    || $class->_default_locale;
-    my $formatter = $args->{formatter} || $class->_default_formatter;
-    my $time_zone = $class->_inflate_time_zone($args->{time_zone} || 'UTC');
+    $args{locale} = delete $args{language} if exists $args{language};
+    my $locale    = delete $args{locale}    || $class->_default_locale;
+    my $formatter = delete $args{formatter} || $class->_default_formatter;
+    my $time_zone = exists $args{time_zone} ? $class->_inflate_time_zone(delete $args{time_zone}) : $_UTC_TIME_ZONE;
+    if (%args) {
+        my $msg = 'Invalid args: '.join ',', keys %args;
+        Carp::croak $msg;
+    }
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
 
@@ -130,38 +125,38 @@ sub now {
 
 sub from_object {
     my $class = shift;
-    my $args = args({
-        object     => 1,
-        language   => 0,
-        locale     => 0,
-        formatter  => 0,
-    } => @_);
-    my $object = $args->{object};
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
+    my $object = delete $args{object}
+        or Carp::croak 'object is required.';
 
-    $args->{locale} = $args->{language} if defined $args->{language};
-    my $locale    = $object->can('locale')    ? $object->locale    : $args->{locale}    || $class->_default_locale;
-    my $formatter = $object->can('formatter') ? $object->formatter : $args->{formatter} || $class->_default_formatter;
-    my $time_zone = $object->can('time_zone') ? $object->time_zone : $class->_default_time_zone;
+    $args{locale} = delete $args{language} if exists $args{language};
+    my $locale    = delete $args{locale}    || $class->_default_locale;
+    my $formatter = delete $args{formatter} || $class->_default_formatter;
+    my $time_zone = $object->can('time_zone') ? $object->time_zone : $_FLOATING_TIME_ZONE;
+    if (%args) {
+        my $msg = 'Invalid args: '.join ',', keys %args;
+        Carp::croak $msg;
+    }
 
     if ($object->isa(__PACKAGE__)) {
         my $self = $object->clone;
-        $self->set_locale($args->{locale}) if defined $args->{locale};
-        $self->set_formatter($args->{formatter}) if defined $args->{formatter};
+        $self->set_locale($locale);
+        $self->set_formatter($formatter) if $formatter;
         return $self;
     }
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
 
     my $moment;
-    if ($object->can('__as_Time_Moment')) {
+    if (_isa_moment_convertable($object)) {
         $moment = Time::Moment->from_object($object);
     }
     else {
-        require DateTime;
+        require DateTime; # fallback
         my $object = DateTime->from_object(object => $object);
         if ($object->time_zone->is_floating) {
             $time_zone = $object->time_zone;
-            $object->set_time_zone('UTC');
+            $object->set_time_zone($_UTC_TIME_ZONE);
         }
         $moment = Time::Moment->from_object($object);
     }
@@ -184,24 +179,25 @@ sub from_object {
 
 sub from_epoch {
     my $class = shift;
-    my $args = args({
-        epoch      => 1,
-        language   => 0,
-        locale     => 0,
-        formatter  => 0,
-        time_zone  => 0,
-    } => @_);
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
+    Carp::croak 'epoch is required.' unless exists $args{epoch};
 
-    $args->{locale} = $args->{language} if defined $args->{language};
-    my $locale    = $args->{locale}    || $class->_default_locale;
-    my $formatter = $args->{formatter} || $class->_default_formatter;
+    my $epoch = delete $args{epoch};
+
+    $args{locale} = delete $args{language} if exists $args{language};
+    my $locale    = delete $args{locale}    || $class->_default_locale;
+    my $formatter = delete $args{formatter} || $class->_default_formatter;
+    my $time_zone = exists $args{time_zone} ? $class->_inflate_time_zone(delete $args{time_zone}) : $_UTC_TIME_ZONE;
+    if (%args) {
+        my $msg = 'Invalid args: '.join ',', keys %args;
+        Carp::croak $msg;
+    }
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-    my $time_zone = $class->_inflate_time_zone($args->{time_zone} || 'UTC');
 
     my $moment = do {
         local $SIG{__WARN__} = sub { die @_ };
-        Time::Moment->from_epoch($args->{epoch});
+        Time::Moment->from_epoch($epoch);
     };
     if (!$time_zone->is_floating) {
         my $offset = $time_zone->offset_for_datetime($moment) / 60;
@@ -220,23 +216,16 @@ sub today { shift->now(@_)->truncate(to => 'day') }
 
 sub last_day_of_month {
     my $class = shift;
-    my $args = args({
-        year       => 1,
-        month      => 1,
-        day        => 0,
-        hour       => 0,
-        minute     => 0,
-        second     => 0,
-        nanosecond => 0,
-        language   => 0,
-        locale     => 0,
-        formatter  => 0,
-        time_zone  => 0,
-    } => @_);
-    my $day = _month_length($args->{year}, $args->{month});
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
+    for my $key (qw/year month/) {
+        Carp::croak "Parameter: $key is required." unless exists $args{$key};
+    }
+
+    my ($year, $month) = @args{qw/year month/};
+    my $day = _month_length($year, $month);
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-    return $class->new(%$args, day => $day);
+    return $class->new(%args, day => $day);
 }
 
 my @_MONTH_LENGTH = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
@@ -257,24 +246,15 @@ sub _is_leap_year {
 
 sub from_day_of_year {
     my $class = shift;
-    my $args = args({
-        year        => 1,
-        day_of_year => 1,
-        month       => 0,
-        day         => 0,
-        hour        => 0,
-        minute      => 0,
-        second      => 0,
-        nanosecond  => 0,
-        language    => 0,
-        locale      => 0,
-        formatter   => 0,
-        time_zone   => 0,
-    } => @_);
-    my $day_of_year = delete $args->{day_of_year};
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
+    for my $key (qw/year day_of_year/) {
+        Carp::croak "Parameter: $key is required." unless exists $args{$key};
+    }
+
+    my $day_of_year = delete $args{day_of_year};
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-    my $self = $class->new(%$args);
+    my $self = $class->new(%args);
     $self->{_moment} = $self->{_moment}->with_day_of_year($day_of_year);
     return $self->_adjust_to_current_offset();
 }
@@ -603,25 +583,21 @@ sub _compare {
 
 sub set {
     my $self = shift;
-    my $args = args({
-        year       => 0,
-        month      => 0,
-        day        => 0,
-        hour       => 0,
-        minute     => 0,
-        second     => 0,
-        nanosecond => 0,
-    } => @_);
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
     my $src = $self->{_moment};
 
-    my %args;
-    for my $unit (keys %$args) {
+    my %params;
+    for my $unit (qw/year month day hour minute second nanosecond/) {
         my $key = $unit eq 'day' ? 'day_of_month' : $unit;
-        $args{$unit} = defined $args->{$unit} ? $args->{$unit} : $src->$key();
+        $params{$unit} = exists $args{$unit} ? delete $args{$unit} : $src->$key();
+    }
+    if (%args) {
+        my $msg = 'Invalid args: '.join ',', keys %args;
+        Carp::croak $msg;
     }
 
-    $self->{_moment} = Time::Moment->new(%args);
+    $self->{_moment} = Time::Moment->new(%params);
 
     return $self->_adjust_to_current_offset();
 }
@@ -642,23 +618,18 @@ sub _calc_date {
     my $type = shift;
     return $self->_calc_duration($type => @_) if @_ == 1 && _isa_duration($_[0]);
 
-    my $args = args({
-        years       => 0,
-        months      => 0,
-        days        => 0,
-        weeks       => 0,
-        hours       => 0,
-        minutes     => 0,
-        seconds     => 0,
-        nanoseconds => 0,
-    } => @_);
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
     my $moment = $self->{_moment};
     for my $unit (qw/nanoseconds seconds minutes hours weeks days months years/) {
-        next unless $args->{$unit};
+        next unless exists $args{$unit};
 
         my $method = $type.'_'.$unit;
-        $moment = $moment->$method($args->{$unit});
+        $moment = $moment->$method(delete $args{$unit});
+    }
+    if (%args) {
+        my $msg = 'Invalid args: '.join ',', keys %args;
+        Carp::croak $msg;
     }
 
     $self->{_moment} = $moment;
@@ -756,6 +727,7 @@ sub _delta {
 sub format_cldr {
     my $self = shift;
 
+    # fallback
     require DateTime;
     return DateTime->from_object(
         object => $self,
@@ -764,8 +736,9 @@ sub format_cldr {
 }
 
 sub set_time_zone {
-    my $self = shift;
-    my ($time_zone) = args_pos(1);
+    my ($self, $time_zone) = @_;
+    Carp::croak 'required time_zone' if @_ != 2;
+
     $time_zone = $self->_inflate_time_zone($time_zone);
     return $self if $time_zone == $self->{time_zone};
     return $self if $time_zone->name eq $self->{time_zone}->name;
@@ -792,9 +765,14 @@ sub time_zone_short_name { $_[0]->{time_zone}->short_name_for_datetime($_[0]) }
 
 sub truncate :method {
     my $self = shift;
-    my $args = args({ to => 1 } => @_);
+    my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
-    my $to = $args->{to};
+    my $to = delete $args{to}
+        or Carp::croak "Parameter: to is required.";
+    if (%args) {
+        my $msg = 'Invalid args: '.join ',', keys %args;
+        Carp::croak $msg;
+    }
 
     if ($to eq 'week' || $to eq 'local_week') {
         my $first_day_of_week = $to eq 'local_week' ? $self->{locale}->first_day_of_week : 1;
@@ -804,25 +782,24 @@ sub truncate :method {
             $self->truncate(to => 'day');
         };
         if ($@) {
-            $self->add(days => $day_diff);
+            $self->add(days => $day_diff); # rollback
             die $@;
         }
         return $self;
     }
-    elsif (first { $to eq $_ } qw/second minute hour day month year/) {
-        my %param;
-        $param{nanosecond} = 0; goto DO_TRUNCATE if $to eq 'second';
-        $param{second}     = 0; goto DO_TRUNCATE if $to eq 'minute';
-        $param{minute}     = 0; goto DO_TRUNCATE if $to eq 'hour';
-        $param{hour}       = 0; goto DO_TRUNCATE if $to eq 'day';
-        $param{day}        = 1; goto DO_TRUNCATE if $to eq 'month';
-        $param{month}      = 1;
 
-    DO_TRUNCATE:
-        return $self->set(%param);
-    }
+    my %param;
+    $param{nanosecond} = 0; goto DO_TRUNCATE if $to eq 'second';
+    $param{second}     = 0; goto DO_TRUNCATE if $to eq 'minute';
+    $param{minute}     = 0; goto DO_TRUNCATE if $to eq 'hour';
+    $param{hour}       = 0; goto DO_TRUNCATE if $to eq 'day';
+    $param{day}        = 1; goto DO_TRUNCATE if $to eq 'month';
+    $param{month}      = 1; goto DO_TRUNCATE if $to eq 'year';
 
     Carp::croak "The 'to' parameter '$to' is unsupported.";
+
+ DO_TRUNCATE:
+    return $self->set(%param);
 }
 
 my %CALC_DURATION_METHOD = (plus => 'add_duration', minus => 'subtract_duration');
@@ -834,8 +811,7 @@ sub _calc_duration {
 
 sub subtract_duration { $_[0]->add_duration($_[1]->inverse) }
 sub add_duration {
-    my $self = shift;
-    my ($duration) = args_pos(1);
+    my ($self, $duration) = @_;
     Carp::croak 'required duration object' unless _isa_duration($duration);
 
     # simple optimization
@@ -849,24 +825,27 @@ sub add_duration {
 }
 
 sub set_locale {
-    my $self = shift;
-    my ($locale) = args_pos(1);
+    my ($self, $locale) = @_;
+    Carp::croak 'required locale' if @_ != 2;
     $self->{locale} = $self->_inflate_locale($locale);
     return $self;
 }
 
 sub set_formatter {
-    my $self = shift;
-    my ($formatter) = args_pos(0);
+    my ($self, $formatter) = @_;
     $self->{formatter} = $self->_inflate_formatter($formatter);
     return $self;
 }
 
 # internal utilities
-sub _isa_datetime { blessed $_[0] && $_[0]->isa('DateTime') }
-sub _isa_datetime_compareble { blessed $_[0] && $_[0]->can('utc_rd_values') }
-sub _isa_duration { blessed $_[0] && ($_[0]->isa('DateTime::Duration') || $_[0]->isa('DateTime::Moment::Duration')) }
-sub _isa_moment { blessed $_[0] && $_[0]->isa('Time::Moment') }
+sub _isa_locale { is_instance($_[0] => 'DateTime::Locale::FromData') || is_instance($_[0] => 'DateTime::Locale::Base') }
+sub _isa_formatter { _isa_invocant($_[0]) && $_[0]->can('format_datetime') }
+sub _isa_time_zone { is_instance($_[0] => 'DateTime::TimeZone') }
+sub _isa_datetime { is_instance($_[0] => 'DateTime') }
+sub _isa_datetime_compareble { blessed($_[0]) && $_[0]->can('utc_rd_values') }
+sub _isa_duration { is_instance($_[0] => 'DateTime::Duration') }
+sub _isa_moment { is_instance($_[0] => 'Time::Moment') }
+sub _isa_moment_convertable { blessed($_[0]) && $_[0]->can('__as_Time_Moment') }
 sub _isa_invocant { blessed $_[0] || Class::Inspector->loaded("$_[0]") }
 
 # define aliases
