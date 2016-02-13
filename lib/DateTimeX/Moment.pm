@@ -218,8 +218,9 @@ sub last_day_of_month {
     my $class = shift;
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
     for my $key (qw/year month/) {
-        Carp::croak "Parameter: $key is required." unless exists $args{$key};
+        Carp::croak "Parameter: $key is required." unless defined $args{$key};
     }
+    Carp::croak q{Parameter 'month' is out of the range [1, 12]} if 0 > $args{month} || $args{month} > 12;
 
     my ($year, $month) = @args{qw/year month/};
     my $day = _month_length($year, $month);
@@ -248,7 +249,7 @@ sub from_day_of_year {
     my $class = shift;
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
     for my $key (qw/year day_of_year/) {
-        Carp::croak "Parameter: $key is required." unless exists $args{$key};
+        Carp::croak "Parameter: $key is required." unless defined $args{$key};
     }
 
     my $day_of_year = delete $args{day_of_year};
