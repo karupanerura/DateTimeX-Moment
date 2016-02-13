@@ -889,7 +889,7 @@ __END__
 
 =head1 NAME
 
-DateTimeX::Moment - DateTime like interface for Time::Moment
+DateTimeX::Moment - EXPERIMENTAL DateTime like interface for Time::Moment
 
 =head1 SYNOPSIS
 

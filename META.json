@@ -1,5 +1,5 @@
 {
-   "abstract" : "DateTime like interface for Time::Moment",
+   "abstract" : "EXPERIMENTAL DateTime like interface for Time::Moment",
    "author" : [
       "karupanerura <karupa@cpan.org>"
    ],

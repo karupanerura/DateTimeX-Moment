@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/karupanerura/DateTimeX-Moment.svg?branch=master)](https://travis-ci.org/karupanerura/DateTimeX-Moment)
 # NAME
 
-DateTimeX::Moment - DateTime like interface for Time::Moment
+DateTimeX::Moment - EXPERIMENTAL DateTime like interface for Time::Moment
 
 # SYNOPSIS
 
