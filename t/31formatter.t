@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
     package Formatter;
@@ -19,11 +19,11 @@ use DateTime::Moment;
 
 my $formatter = Formatter->new();
 
-my $dt = DateTime::Moment->from_epoch( epoch => time(), formatter => $formatter );
+my $dt = DateTimeX::Moment->from_epoch( epoch => time(), formatter => $formatter );
 ok( $dt, "Constructor (from_epoch) : $@" );
 
 $dt = eval {
-    DateTime::Moment->new(
+    DateTimeX::Moment->new(
         year      => 2004,
         month     => 9,
         day       => 2,
@@ -36,7 +36,7 @@ $dt = eval {
 ok( $dt, "Constructor (new) : $@" );
 
 $dt
-    = eval { DateTime::Moment->from_object( object => $dt, formatter => $formatter ) };
+    = eval { DateTimeX::Moment->from_object( object => $dt, formatter => $formatter ) };
 ok( $dt, "Constructor (from_object) : $@" );
 
 is( $dt->formatter, $formatter, "check from_object copies formatter" );

@@ -3,12 +3,12 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 # exercises a bug found in Perl version of _normalize_tai_seconds -
 # fixed in 0.15
 {
-    my $dt = DateTime::Moment->new( year => 2000, month => 12 );
+    my $dt = DateTimeX::Moment->new( year => 2000, month => 12 );
 
     $dt->add( months => 1 )->truncate( to => 'month' )
         ->subtract( seconds => 1 );
@@ -21,7 +21,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2000, month => 12 );
+    my $dt = DateTimeX::Moment->new( year => 2000, month => 12 );
     my $dt2 = $dt->clone->add( months => 1 )->subtract( seconds => 1 );
 
     is( $dt2->year,   2000, 'year is 2001' );

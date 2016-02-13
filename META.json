@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "DateTime-Moment",
+   "name" : "DateTimeX-Moment",
    "no_index" : {
       "directory" : [
          "t",
@@ -68,13 +68,13 @@
    "release_status" : "unstable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/karupanerura/DateTime-Moment/issues"
+         "web" : "https://github.com/karupanerura/DateTimeX-Moment/issues"
       },
-      "homepage" : "https://github.com/karupanerura/DateTime-Moment",
+      "homepage" : "https://github.com/karupanerura/DateTimeX-Moment",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/karupanerura/DateTime-Moment.git",
-         "web" : "https://github.com/karupanerura/DateTime-Moment"
+         "url" : "git://github.com/karupanerura/DateTimeX-Moment.git",
+         "web" : "https://github.com/karupanerura/DateTimeX-Moment"
       }
    },
    "version" : "0.01",

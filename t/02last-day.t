@@ -3,14 +3,14 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 my @last = ( 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 );
 my @leap_last = @last;
 $leap_last[1]++;
 
 foreach my $month ( 1 .. 12 ) {
-    my $dt = DateTime::Moment->last_day_of_month(
+    my $dt = DateTimeX::Moment->last_day_of_month(
         year      => 2001,
         month     => $month,
         time_zone => 'UTC',
@@ -22,7 +22,7 @@ foreach my $month ( 1 .. 12 ) {
 }
 
 foreach my $month ( 1 .. 12 ) {
-    my $dt = DateTime::Moment->last_day_of_month(
+    my $dt = DateTimeX::Moment->last_day_of_month(
         year      => 2004,
         month     => $month,
         time_zone => 'UTC',
@@ -35,7 +35,7 @@ foreach my $month ( 1 .. 12 ) {
 
 {
     eval {
-        DateTime::Moment->last_day_of_month(
+        DateTimeX::Moment->last_day_of_month(
             year       => 2000, month => 1,
             nanosecond => 2000
         );

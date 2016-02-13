@@ -3,10 +3,10 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1996, month  => 11, day    => 22,
         hour => 18,   minute => 30, second => 20,
         time_zone => 'UTC',
@@ -56,7 +56,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1996, month  => 11, day    => 22,
         hour => 18,   minute => 30, second => 20,
         time_zone => 'UTC',

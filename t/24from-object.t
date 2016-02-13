@@ -3,11 +3,11 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
-my $dt1 = DateTime::Moment->new( year => 1970, hour => 1, nanosecond => 100 );
+my $dt1 = DateTimeX::Moment->new( year => 1970, hour => 1, nanosecond => 100 );
 
-my $dt2 = DateTime::Moment->from_object( object => $dt1 );
+my $dt2 = DateTimeX::Moment->from_object( object => $dt1 );
 
 is( $dt1->year,       1970, 'year is 1970' );
 is( $dt1->hour,       1,    'hour is 1' );
@@ -20,9 +20,9 @@ is( $dt1->nanosecond, 100,  'nanosecond is 100' );
     );
 
     # Tests creating objects from other calendars (without time zones)
-    my $t2 = DateTime::Moment->from_object( object => $t1 );
+    my $t2 = DateTimeX::Moment->from_object( object => $t1 );
 
-    isa_ok( $t2, 'DateTime::Moment' );
+    isa_ok( $t2, 'DateTimeX::Moment' );
     is(
         $t2->datetime, '0001-01-01T00:00:00',
         'convert from object without tz'
@@ -38,9 +38,9 @@ is( $dt1->nanosecond, 100,  'nanosecond is 100' );
     );
 
     # Tests creating objects from other calendars (with time zones)
-    my $t2 = DateTime::Moment->from_object( object => $t1 );
+    my $t2 = DateTimeX::Moment->from_object( object => $t1 );
 
-    isa_ok( $t2, 'DateTime::Moment' );
+    isa_ok( $t2, 'DateTimeX::Moment' );
     is( $t2->time_zone->name, 'America/Chicago', 'time_zone is preserved' );
 }
 
@@ -51,9 +51,9 @@ is( $dt1->nanosecond, 100,  'nanosecond is 100' );
         rd_secs => 86400, time_zone => $tz
     );
 
-    my $t2 = DateTime::Moment->from_object( object => $t1 );
+    my $t2 = DateTimeX::Moment->from_object( object => $t1 );
 
-    isa_ok( $t2, 'DateTime::Moment' );
+    isa_ok( $t2, 'DateTimeX::Moment' );
 }
 
 done_testing();

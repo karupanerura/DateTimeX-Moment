@@ -3,17 +3,17 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year => 2001, month  => 5, day    => 10,
         hour => 4,    minute => 3, second => 2,
         nanosecond => 12,
         time_zone  => 'UTC'
     );
 
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year => 2001, month  => 6, day    => 12,
         hour => 5,    minute => 7, second => 23,
         nanosecond => 7,
@@ -78,13 +78,13 @@ use DateTime::Moment;
 }
 
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year      => 2001, month  => 5, day    => 10,
         hour      => 15,   minute => 0, second => 0,
         time_zone => 'UTC'
     );
 
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year      => 2001, month  => 5,  day    => 11,
         hour      => 12,   minute => 30, second => 10,
         time_zone => 'UTC'

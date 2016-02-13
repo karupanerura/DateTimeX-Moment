@@ -4,14 +4,14 @@ use utf8;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 binmode $_, ':encoding(UTF-8)' for Test::Builder->new()->output(),
     Test::Builder->new()->failure_output(),
     Test::Builder->new()->todo_output();
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year       => 1976,
         month      => 10,
         day        => 20,
@@ -154,7 +154,7 @@ binmode $_, ':encoding(UTF-8)' for Test::Builder->new()->output(),
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year       => 2008,
         month      => 10,
         day        => 20,
@@ -173,7 +173,7 @@ binmode $_, ':encoding(UTF-8)' for Test::Builder->new()->output(),
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year       => 2008,
         month      => 10,
         day        => 20,
@@ -192,7 +192,7 @@ binmode $_, ':encoding(UTF-8)' for Test::Builder->new()->output(),
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year       => 2008,
         month      => 10,
         day        => 20,
@@ -211,7 +211,7 @@ binmode $_, ':encoding(UTF-8)' for Test::Builder->new()->output(),
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year   => 2009,
         month  => 4,
         day    => 13,
@@ -230,7 +230,7 @@ binmode $_, ':encoding(UTF-8)' for Test::Builder->new()->output(),
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year   => 2009,
         month  => 4,
         day    => 13,
@@ -250,7 +250,7 @@ binmode $_, ':encoding(UTF-8)' for Test::Builder->new()->output(),
 
 SKIP: {
     skip 'incompatible', 10;
-    my $dt = DateTime::Moment->new( year => -10 );
+    my $dt = DateTimeX::Moment->new( year => -10 );
 
     my %tests = (
         'y'     => '-10',
@@ -276,7 +276,7 @@ SKIP: {
 
 SKIP: {
     skip 'incompatible', 10;
-    my $dt = DateTime::Moment->new( year => -1976 );
+    my $dt = DateTimeX::Moment->new( year => -1976 );
 
     my %tests = (
         'y'     => '-1976',

@@ -3,13 +3,13 @@ use warnings;
 
 use Test::Fatal;
 use Test::More skip_all => 'unsupported';
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 # tests using UTC times
 {
 
     # 1972-06-30T23:58:20 UTC
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -40,7 +40,7 @@ use DateTime::Moment;
     is( $t->{utc_rd_secs}, 86400, "utc_rd_secs is 86400" );
 
     # subtract_datetime
-    my $t2 = DateTime::Moment->new(
+    my $t2 = DateTimeX::Moment->new(
         year => 1972, month  => 07, day    => 1,
         hour => 0,    minute => 0,  second => 20,
         time_zone => 'UTC',
@@ -57,7 +57,7 @@ use DateTime::Moment;
     # tests using floating times
     # a floating time has no leap seconds
 
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1971, month  => 12, day    => 31,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'floating',
@@ -74,7 +74,7 @@ use DateTime::Moment;
 
     # subtract_datetime, using floating times
 
-    my $t2 = DateTime::Moment->new(
+    my $t2 = DateTimeX::Moment->new(
         year => 1972, month  => 1, day    => 1,
         hour => 0,    minute => 0, second => 20,
         time_zone => 'floating',
@@ -92,7 +92,7 @@ use DateTime::Moment;
     # leap seconds occur during _UTC_ midnight
 
     # 1972-06-30 20:58:20 -03:00 = 1972-06-30 23:58:20 UTC
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 20,   minute => 58, second => 20,
         time_zone => 'America/Sao_Paulo',
@@ -117,7 +117,7 @@ use DateTime::Moment;
 
 # test that we can set second to 60 (negative offset)
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 20,   minute => 59, second => 60,
         time_zone => 'America/Sao_Paulo',
@@ -127,7 +127,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 6, day    => 30,
         hour => 21,   minute => 0, second => 0,
         time_zone => 'America/Sao_Paulo',
@@ -137,7 +137,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 6, day    => 30,
         hour => 21,   minute => 0, second => 1,
         time_zone => 'America/Sao_Paulo',
@@ -149,7 +149,7 @@ use DateTime::Moment;
 # test that we can set second to 60 (negative offset)
 {
     eval {
-        my $t = DateTime::Moment->new(
+        my $t = DateTimeX::Moment->new(
             year => 1972, month  => 6,  day    => 30,
             hour => 22,   minute => 59, second => 60,
             time_zone => '-0100',
@@ -169,7 +169,7 @@ use DateTime::Moment;
 # test that we can set second to 60 (positive offset)
 {
     eval {
-        my $t = DateTime::Moment->new(
+        my $t = DateTimeX::Moment->new(
             year => 1972, month  => 7,  day    => 1,
             hour => 0,    minute => 59, second => 60,
             time_zone => '+0100',
@@ -190,7 +190,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 1,
         hour => 0,    minute => 59, second => 59,
         time_zone => '+0100',
@@ -200,7 +200,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 7, day    => 1,
         hour => 1,    minute => 0, second => 0,
         time_zone => '+0100',
@@ -210,7 +210,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 7, day    => 1,
         hour => 1,    minute => 0, second => 1,
         time_zone => '+0100',
@@ -220,7 +220,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 7, day    => 1,
         hour => 0,    minute => 0, second => 29,
         time_zone => '+00:00:30',
@@ -234,7 +234,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 20,   minute => 59, second => 60,
         time_zone => 'America/Sao_Paulo',
@@ -261,7 +261,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 23,   minute => 59, second => 59,
         time_zone => 'UTC',
@@ -285,20 +285,20 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2003, time_zone => 'UTC' );
+    my $dt = DateTimeX::Moment->new( year => 2003, time_zone => 'UTC' );
 
     is( $dt->leap_seconds, 22, 'datetime has 22 leap seconds' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2003, time_zone => 'floating' );
+    my $dt = DateTimeX::Moment->new( year => 2003, time_zone => 'floating' );
 
     is( $dt->leap_seconds, 0, 'floating datetime has 0 leap seconds' );
 }
 
 # date math across leap seconds distinguishes between minutes and second
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year      => 1972, month  => 12, day    => 31,
         hour      => 23,   minute => 59, second => 30,
         time_zone => 'UTC'
@@ -315,7 +315,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year      => 1972, month  => 12, day    => 31,
         hour      => 23,   minute => 59, second => 30,
         time_zone => 'UTC'
@@ -332,7 +332,7 @@ use DateTime::Moment;
 }
 
 {
-    my $t = DateTime::Moment->new(
+    my $t = DateTimeX::Moment->new(
         year      => 1972, month  => 12, day    => 31,
         hour      => 23,   minute => 59, second => 30,
         time_zone => 'UTC'
@@ -350,7 +350,7 @@ use DateTime::Moment;
 
 {
     eval {
-        DateTime::Moment->new(
+        DateTimeX::Moment->new(
             year => 1972, month  => 12, day    => 31,
             hour => 23,   minute => 59, second => 61,
             time_zone => 'UTC',
@@ -359,7 +359,7 @@ use DateTime::Moment;
     ok( $@, "Cannot give second of 61 except when it matches a leap second" );
 
     eval {
-        DateTime::Moment->new(
+        DateTimeX::Moment->new(
             year => 1972, month  => 12, day    => 31,
             hour => 23,   minute => 58, second => 60,
             time_zone => 'UTC',
@@ -368,7 +368,7 @@ use DateTime::Moment;
     ok( $@, "Cannot give second of 60 except when it matches a leap second" );
 
     eval {
-        DateTime::Moment->new(
+        DateTimeX::Moment->new(
             year => 1972, month  => 12, day    => 31,
             hour => 23,   minute => 59, second => 60,
             time_zone => 'floating',
@@ -378,13 +378,13 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 1998, month  => 12, day    => 31,
         hour => 23,   minute => 59, second => 60,
         time_zone => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 1998, month  => 12, day    => 31,
         hour => 23,   minute => 58, second => 50,
         time_zone => 'UTC',
@@ -402,13 +402,13 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 1998, month  => 12, day    => 31,
         hour => 23,   minute => 59, second => 55,
         time_zone => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 1998, month  => 12, day    => 31,
         hour => 23,   minute => 58, second => 50,
         time_zone => 'UTC',
@@ -426,13 +426,13 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 1998, month  => 12, day    => 31,
         hour => 23,   minute => 59, second => 55,
         time_zone => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 1999, month  => 1, day    => 1,
         hour => 0,    minute => 0, second => 30,
         time_zone => 'UTC',
@@ -451,14 +451,14 @@ use DateTime::Moment;
 
 # catch off-by-one when carrying a leap second
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 1998, month  => 12, day    => 31,
         hour => 23,   minute => 59, second => 0,
         nanosecond => 1,
         time_zone  => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 1999, month  => 1, day    => 1,
         hour => 0,    minute => 0, second => 0,
         time_zone => 'UTC',
@@ -475,7 +475,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -491,7 +491,7 @@ use DateTime::Moment;
 
 # a bunch of tests that math works across a leap second for various time zones
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 20,   minute => 58, second => 20,
         time_zone => '-0300',
@@ -506,7 +506,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 1,
         hour => 2,    minute => 58, second => 20,
         time_zone => '+0300',
@@ -521,7 +521,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -536,7 +536,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 20,   minute => 58, second => 20,
         time_zone => '-0300',
@@ -551,7 +551,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 1,
         hour => 2,    minute => 58, second => 20,
         time_zone => '+0300',
@@ -566,7 +566,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -581,7 +581,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 20,   minute => 58, second => 20,
         time_zone => '-0300',
@@ -596,7 +596,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 1,
         hour => 2,    minute => 58, second => 20,
         time_zone => '+0300',
@@ -611,7 +611,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -626,7 +626,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 20,   minute => 58, second => 20,
         time_zone => '-0300',
@@ -641,7 +641,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 1,
         hour => 2,    minute => 58, second => 20,
         time_zone => '+0300',
@@ -656,7 +656,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 2,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -671,7 +671,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 2,
         hour => 20,   minute => 58, second => 20,
         time_zone => '-0300',
@@ -686,7 +686,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 3,
         hour => 2,    minute => 58, second => 20,
         time_zone => '+0300',
@@ -701,7 +701,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 2,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -716,7 +716,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 2,
         hour => 20,   minute => 58, second => 20,
         time_zone => '-0300',
@@ -731,7 +731,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 3,
         hour => 2,    minute => 58, second => 20,
         time_zone => '+0300',
@@ -746,7 +746,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 2,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -761,7 +761,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 2,
         hour => 20,   minute => 58, second => 20,
         time_zone => '-0300',
@@ -776,7 +776,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 3,
         hour => 2,    minute => 58, second => 20,
         time_zone => '+0300',
@@ -791,7 +791,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 2,
         hour => 23,   minute => 58, second => 20,
         time_zone => 'UTC',
@@ -806,7 +806,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 2,
         hour => 20,   minute => 58, second => 20,
         time_zone => '-0300',
@@ -821,7 +821,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 3,
         hour => 2,    minute => 58, second => 20,
         time_zone => '+0300',
@@ -836,7 +836,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 7,  day    => 1,
         hour => 12,   minute => 58, second => 20,
         time_zone => '+1200',
@@ -851,7 +851,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1972, month  => 6,  day    => 30,
         hour => 12,   minute => 58, second => 20,
         time_zone => '-1200',
@@ -866,7 +866,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 7,  day    => 1,
         hour      => 0,    minute => 59, second => 59,
         time_zone => '+0100'
@@ -880,7 +880,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 7,  day    => 1,
         hour      => 0,    minute => 59, second => 60,
         time_zone => '+0100'
@@ -894,7 +894,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 7, day    => 1,
         hour      => 1,    minute => 0, second => 0,
         time_zone => '+0100'
@@ -908,7 +908,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 7,  day    => 1,
         hour      => 23,   minute => 59, second => 59,
         time_zone => '+0100'
@@ -928,7 +928,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 22,   minute => 59, second => 59,
         time_zone => '-0100'
@@ -942,7 +942,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 22,   minute => 59, second => 60,
         time_zone => '-0100'
@@ -956,7 +956,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6, day    => 30,
         hour      => 23,   minute => 0, second => 0,
         time_zone => '-0100'
@@ -970,7 +970,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 59,
         time_zone => 'UTC'
@@ -984,7 +984,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 60,
         time_zone => 'UTC'
@@ -998,7 +998,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 7, day    => 1,
         hour      => 0,    minute => 0, second => 0,
         time_zone => 'UTC'
@@ -1012,7 +1012,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 59,
         time_zone => 'UTC'
@@ -1032,7 +1032,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 59,
         time_zone => 'UTC'
@@ -1046,7 +1046,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 60,
         time_zone => 'UTC'
@@ -1060,7 +1060,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 7, day    => 1,
         hour      => 0,    minute => 0, second => 0,
         time_zone => 'UTC'
@@ -1074,7 +1074,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 2005, month  => 12, day    => 31,
         hour      => 23,   minute => 59, second => 60,
         time_zone => 'UTC'
@@ -1084,7 +1084,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2005, month  => 12, day    => 31,
         hour => 23,   minute => 59, second => 59,
         time_zone => 'UTC',
@@ -1100,7 +1100,7 @@ use DateTime::Moment;
 # bug reported by Mike Schilli - addition got "stuck" at 60 seconds
 # and never rolled over to the following day
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2005, month  => 12, day    => 31,
         hour => 23,   minute => 59, second => 59,
         time_zone => 'UTC',
@@ -1116,7 +1116,7 @@ use DateTime::Moment;
 # and this makes sure that fix for the above bug didn't break
 # _non-leapsecond_ second addition
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2005, month  => 12, day    => 30,
         hour => 23,   minute => 59, second => 58,
         time_zone => 'UTC',
@@ -1162,7 +1162,7 @@ use DateTime::Moment;
 
         is(
             exception {
-                DateTime::Moment->new(
+                DateTimeX::Moment->new(
                     year      => $date->[0],
                     month     => $date->[1],
                     day       => $date->[2],
@@ -1173,7 +1173,7 @@ use DateTime::Moment;
                 );
             },
             undef,
-            "We can make a DateTime::Moment object for the leap second on $formatted"
+            "We can make a DateTimeX::Moment object for the leap second on $formatted"
         );
     }
 }

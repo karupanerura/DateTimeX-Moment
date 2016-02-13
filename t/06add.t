@@ -4,9 +4,9 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
-my $dt = DateTime::Moment->new(
+my $dt = DateTimeX::Moment->new(
     year => 1996, month  => 11, day    => 22,
     hour => 18,   minute => 30, second => 20,
     time_zone => 'UTC',
@@ -30,7 +30,7 @@ $dt->add( minutes => 25, hours => 3, seconds => 7 );
 is( $dt->datetime, '1997-01-31T22:07:42', 'Adding h,m,s' );
 
 # Now, test the adding of durations
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year      => 1986, month  => 1, day => 28,
     hour      => 16,   minute => 38,
     time_zone => 'UTC'
@@ -42,7 +42,7 @@ is(
     "Adding durations with minutes and seconds works"
 );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year      => 1986, month  => 1, day => 28,
     hour      => 16,   minute => 38,
     time_zone => 'UTC'
@@ -54,7 +54,7 @@ is(
     "Adding durations with seconds only works"
 );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year      => 1986, month  => 1, day => 28,
     hour      => 16,   minute => 38,
     time_zone => 'UTC'
@@ -66,7 +66,7 @@ is(
     "Adding durations with hours and minutes works"
 );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year      => 1986, month  => 1, day => 28,
     hour      => 16,   minute => 38,
     time_zone => 'UTC'
@@ -78,7 +78,7 @@ is(
     "Adding durations with days only works"
 );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year      => 1986, month  => 1, day => 28,
     hour      => 16,   minute => 38,
     time_zone => 'UTC'
@@ -90,7 +90,7 @@ is(
     "Adding durations with days and hours works"
 );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year      => 1986, month  => 1, day => 28,
     hour      => 16,   minute => 38,
     time_zone => 'UTC'
@@ -103,7 +103,7 @@ is(
 );
 
 # Add 15M - this test failed at one point in N::I::Time
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year      => 2001, month => 4, day => 5,
     hour      => 16,
     time_zone => 'UTC'
@@ -121,7 +121,7 @@ is( $dt->datetime, '2001-04-05T16:00:00', "Back where we started" );
 
 undef $dt;
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year      => 1986, month  => 1, day => 28,
     hour      => 16,   minute => 38,
     time_zone => 'UTC'
@@ -139,84 +139,84 @@ is(
 );
 
 # test sub months
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 1, day => 31,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-02-01', 'february 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 2, day => 28,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-03-01', 'march 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 3, day => 31,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-04-01', 'april 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 4, day => 30,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-05-01', 'may 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 5, day => 31,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-06-01', 'june 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 6, day => 30,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-07-01', 'july 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 7, day => 31,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-08-01', 'august 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 8, day => 31,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-09-01', 'september 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 9, day => 30,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-10-01', 'october 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 10, day => 31,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-11-01', 'november 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 11, day => 30,
     time_zone => 'UTC',
 );
 $dt->add( days => 1 );
 is( $dt->date, '2001-12-01', 'december 1st' );
 
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 12, day => 31,
     time_zone => 'UTC',
 );
@@ -226,7 +226,7 @@ is( $dt->date, '2002-01-01', 'january 1st' );
 # Adding years
 
 # Before leap day, not a leap year ...
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 2, day => 28,
     time_zone => 'UTC',
 );
@@ -236,7 +236,7 @@ $dt->add( years => 17 );
 is( $dt->date, '2019-02-28', 'Adding 17 years' );
 
 # After leap day, not a leap year ...
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2001, month => 3, day => 28,
     time_zone => 'UTC',
 );
@@ -246,7 +246,7 @@ $dt->add( years => 17 );
 is( $dt->date, '2019-03-28', 'Adding 17 years' );
 
 # On leap day, in a leap year ...
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2000, month => 2, day => 29,
     time_zone => 'UTC',
 );
@@ -256,7 +256,7 @@ $dt->add( years => 17 );
 is( $dt->date, '2018-02-28', 'Adding 17 years' );
 
 # Before leap day, in a leap year ...
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2000, month => 2, day => 28,
     time_zone => 'UTC',
 );
@@ -266,7 +266,7 @@ $dt->add( years => 17 );
 is( $dt->date, '2018-02-28', 'Adding 17 years' );
 
 # After leap day, in a leap year ...
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 2000, month => 3, day => 28,
     time_zone => 'UTC',
 );
@@ -277,7 +277,7 @@ is( $dt->date, '2018-03-28', 'Adding 17 years' );
 
 # Test a bunch of years, before leap day
 for ( 1 .. 99 ) {
-    $dt = DateTime::Moment->new(
+    $dt = DateTimeX::Moment->new(
         year => 2000, month => 2, day => 28,
         time_zone => 'UTC',
     );
@@ -288,7 +288,7 @@ for ( 1 .. 99 ) {
 
 # Test a bunch of years, after leap day
 for ( 1 .. 99 ) {
-    $dt = DateTime::Moment->new(
+    $dt = DateTimeX::Moment->new(
         year => 2000, month => 3, day => 28,
         time_zone => 'UTC',
     );
@@ -301,7 +301,7 @@ for ( 1 .. 99 ) {
 
 # Test a bunch of years, before leap day
 for ( 1 .. 97 ) {
-    $dt = DateTime::Moment->new(
+    $dt = DateTimeX::Moment->new(
         year => 2002, month => 2, day => 28,
         time_zone => 'UTC',
     );
@@ -312,7 +312,7 @@ for ( 1 .. 97 ) {
 
 # Test a bunch of years, after leap day
 for ( 1 .. 97 ) {
-    $dt = DateTime::Moment->new(
+    $dt = DateTimeX::Moment->new(
         year => 2002, month => 3, day => 28,
         time_zone => 'UTC',
     );
@@ -323,7 +323,7 @@ for ( 1 .. 97 ) {
 
 # subtract years
 for ( 1 .. 97 ) {
-    $dt = DateTime::Moment->new(
+    $dt = DateTimeX::Moment->new(
         year => 1999, month => 3, day => 1,
         time_zone => 'UTC',
     );
@@ -335,7 +335,7 @@ for ( 1 .. 97 ) {
 # test some old bugs
 
 # bug adding months where current month + months added were > 25
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 1997, month => 12, day => 1,
     time_zone => 'UTC',
 );
@@ -343,18 +343,18 @@ $dt->add( months => 14 );
 is( $dt->date, '1999-02-01', 'Adding months--rollover year' );
 
 # bug subtracting months with year rollover
-$dt = DateTime::Moment->new(
+$dt = DateTimeX::Moment->new(
     year => 1997, month => 1, day => 1,
     time_zone => 'UTC',
 );
 $dt->add( months => -1 );
 is( $dt->date, '1996-12-01', 'Subtracting months--rollover year' );
 
-my $new = $dt + DateTime::Moment::Duration->new( years => 2 );
+my $new = $dt + DateTimeX::Moment::Duration->new( years => 2 );
 is( $new->date, '1998-12-01', 'test + overloading' );
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1997, month  => 1, day    => 1,
         hour => 1,    minute => 1, second => 59,
         nanosecond => 500000000,
@@ -368,14 +368,14 @@ is( $new->date, '1998-12-01', 'test + overloading' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2003, month => 2, day => 28 );
+    my $dt = DateTimeX::Moment->new( year => 2003, month => 2, day => 28 );
     $dt->add( months => 1, days => 1 );
 
     is( $dt->ymd, '2003-04-01', 'order of units in date math' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2003, hour => 12, minute => 1 );
+    my $dt = DateTimeX::Moment->new( year => 2003, hour => 12, minute => 1 );
     $dt->add( minutes => 30, seconds => -1 );
 
     is( $dt->hour,   12, 'hour is 12' );
@@ -384,7 +384,7 @@ is( $new->date, '1998-12-01', 'test + overloading' );
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 2014,
         month     => 7,
         day       => 1,

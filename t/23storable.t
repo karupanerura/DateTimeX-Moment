@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 unless ( eval { require Storable; 1 } ) {
     plan skip_all => 'Cannot load Storable';
@@ -11,7 +11,7 @@ unless ( eval { require Storable; 1 } ) {
 
 {
     my @dt = (
-        DateTime::Moment->new(
+        DateTimeX::Moment->new(
             year       => 1950,
             hour       => 1,
             nanosecond => 1,
@@ -51,7 +51,7 @@ unless ( eval { require Storable; 1 } ) {
 }
 
 {
-    my $dt1 = DateTime::Moment->now( locale => 'en-US' );
+    my $dt1 = DateTimeX::Moment->now( locale => 'en-US' );
     my $dt2 = Storable::dclone($dt1);
     my $dt3 = Storable::thaw( Storable::nfreeze($dt2) );
 
@@ -87,7 +87,7 @@ unless ( eval { require Storable; 1 } ) {
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 2004,
         formatter => 'Formatter',
     );

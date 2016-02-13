@@ -4,7 +4,7 @@ use warnings;
 use Test::Fatal;
 use Test::More 0.88;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 # These tests are for a bug related to a bad interaction between the
 # horrid ->_handle_offset_modifier method and calling ->set_time_zone
@@ -20,7 +20,7 @@ use DateTime::Moment;
 # These tests come from one of the zdump-generated test files in
 # DT::TZ
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1922, month  => 8,  day    => 31,
         hour => 23,   minute => 59, second => 59,
         time_zone => 'UTC',
@@ -44,7 +44,7 @@ use DateTime::Moment;
 
 SKIP: {
     skip 'unsupoorted', 2;
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 2013,
         month     => 3,
         day       => 10,
@@ -67,7 +67,7 @@ SKIP: {
 }
 
 {
-    my $dt = DateTime::Moment->now( time_zone => 'America/Chicago' );
+    my $dt = DateTimeX::Moment->now( time_zone => 'America/Chicago' );
 
     ok(
         $dt->set_time_zone('America/Chicago'),

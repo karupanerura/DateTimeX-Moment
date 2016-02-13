@@ -1,13 +1,13 @@
-[![Build Status](https://travis-ci.org/karupanerura/DateTime-Moment.svg?branch=master)](https://travis-ci.org/karupanerura/DateTime-Moment)
+[![Build Status](https://travis-ci.org/karupanerura/DateTimeX-Moment.svg?branch=master)](https://travis-ci.org/karupanerura/DateTimeX-Moment)
 # NAME
 
-DateTime::Moment - DateTime like interface for Time::Moment
+DateTimeX::Moment - DateTime like interface for Time::Moment
 
 # SYNOPSIS
 
-    use DateTime::Moment;
+    use DateTimeX::Moment;
 
-    $dt = DateTime::Moment->new(
+    $dt = DateTimeX::Moment->new(
         year       => 1964,
         month      => 10,
         day        => 16,
@@ -18,8 +18,8 @@ DateTime::Moment - DateTime like interface for Time::Moment
         time_zone  => 'Asia/Taipei',
     );
 
-    $dt = DateTime::Moment->from_epoch( epoch => $epoch );
-    $dt = DateTime::Moment->now; # same as ( epoch => time() )
+    $dt = DateTimeX::Moment->from_epoch( epoch => $epoch );
+    $dt = DateTimeX::Moment->now; # same as ( epoch => time() )
 
     $year   = $dt->year;
     $month  = $dt->month;          # 1-12

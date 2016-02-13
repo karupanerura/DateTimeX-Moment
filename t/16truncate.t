@@ -4,7 +4,7 @@ use warnings;
 use Test::Fatal;
 use Test::More 0.88;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 my %vals = (
     year       => 50,
@@ -17,7 +17,7 @@ my %vals = (
 );
 
 {
-    my $dt = DateTime::Moment->new(%vals);
+    my $dt = DateTimeX::Moment->new(%vals);
     $dt->truncate( to => 'second' );
     foreach my $f (qw( year month day hour minute second )) {
         is( $dt->$f(), $vals{$f}, "$f should be $vals{$f}" );
@@ -29,7 +29,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(%vals);
+    my $dt = DateTimeX::Moment->new(%vals);
     $dt->truncate( to => 'minute' );
     foreach my $f (qw( year month day hour minute )) {
         is( $dt->$f(), $vals{$f}, "$f should be $vals{$f}" );
@@ -41,7 +41,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(%vals);
+    my $dt = DateTimeX::Moment->new(%vals);
     $dt->truncate( to => 'hour' );
     foreach my $f (qw( year month day hour )) {
         is( $dt->$f(), $vals{$f}, "$f should be $vals{$f}" );
@@ -53,7 +53,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(%vals);
+    my $dt = DateTimeX::Moment->new(%vals);
     $dt->truncate( to => 'day' );
     foreach my $f (qw( year month day )) {
         is( $dt->$f(), $vals{$f}, "$f should be $vals{$f}" );
@@ -65,7 +65,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(%vals);
+    my $dt = DateTimeX::Moment->new(%vals);
     $dt->truncate( to => 'month' );
     foreach my $f (qw( year month )) {
         is( $dt->$f(), $vals{$f}, "$f should be $vals{$f}" );
@@ -81,7 +81,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(%vals);
+    my $dt = DateTimeX::Moment->new(%vals);
     $dt->truncate( to => 'year' );
     foreach my $f (qw( year )) {
         is( $dt->$f(), $vals{$f}, "$f should be $vals{$f}" );
@@ -97,7 +97,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2003, month => 11, day => 17 );
+    my $dt = DateTimeX::Moment->new( year => 2003, month => 11, day => 17 );
 
     for ( 1 .. 6 ) {
         my $trunc = $dt->clone->add( days => $_ )->truncate( to => 'week' );
@@ -118,7 +118,7 @@ my %vals = (
     }
 
     {
-        my $dt = DateTime::Moment->new( year => 2003, month => 10, day => 2 )
+        my $dt = DateTimeX::Moment->new( year => 2003, month => 10, day => 2 )
             ->truncate( to => 'week' );
 
         is( $dt->year,  2003, 'truncation to week across month boundary' );
@@ -128,7 +128,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year   => 2013, month => 12, day => 16,
         locale => 'fr_FR'
     );
@@ -154,7 +154,7 @@ my %vals = (
     }
 
     {
-        my $dt = DateTime::Moment->new(
+        my $dt = DateTimeX::Moment->new(
             year   => 2013, month => 11, day => 2,
             locale => 'fr_FR'
         )->truncate( to => 'local_week' );
@@ -175,7 +175,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year   => 2013, month => 12, day => 15,
         locale => 'en_US'
     );
@@ -201,7 +201,7 @@ my %vals = (
     }
 
     {
-        my $dt = DateTime::Moment->new(
+        my $dt = DateTimeX::Moment->new(
             year   => 2013, month => 11, day => 2,
             locale => 'en_US'
         )->truncate( to => 'local_week' );
@@ -222,7 +222,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(%vals);
+    my $dt = DateTimeX::Moment->new(%vals);
 
     for my $bad (qw( seconds minutes year_foo month_bar )) {
         like(
@@ -234,7 +234,7 @@ my %vals = (
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 2010,
         month     => 3,
         day       => 25,

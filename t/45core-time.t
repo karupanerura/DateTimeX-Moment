@@ -3,12 +3,12 @@ use warnings;
 
 use Test::More skip_all => 'unsupported';
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 no warnings 'redefine';
 local *DateTime::_core_time = sub {0};
 
-my $dt = DateTime::Moment->now;
+my $dt = DateTimeX::Moment->now;
 
 is(
     "$dt",

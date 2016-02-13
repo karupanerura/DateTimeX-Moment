@@ -3,9 +3,9 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
-my $d = DateTime::Moment->new(
+my $d = DateTimeX::Moment->new(
     year      => 2001,
     month     => 7,
     day       => 5,
@@ -82,7 +82,7 @@ is( $d->era_name, 'Anno Domini', '->era_abbr' );
 is( $d->quarter_abbr, 'Q3',          '->quarter_abbr' );
 is( $d->quarter_name, '3rd quarter', '->quarter_name' );
 
-my $leap_d = DateTime::Moment->new(
+my $leap_d = DateTimeX::Moment->new(
     year      => 2004,
     month     => 7,
     day       => 5,
@@ -94,7 +94,7 @@ my $leap_d = DateTime::Moment->new(
 
 is( $leap_d->is_leap_year, 1, '->is_leap_year' );
 
-my $sunday = DateTime::Moment->new(
+my $sunday = DateTimeX::Moment->new(
     year      => 2003,
     month     => 1,
     day       => 26,
@@ -103,7 +103,7 @@ my $sunday = DateTime::Moment->new(
 
 is( $sunday->day_of_week, 7, "Sunday is day 7" );
 
-my $monday = DateTime::Moment->new(
+my $monday = DateTimeX::Moment->new(
     year      => 2003,
     month     => 1,
     day       => 27,
@@ -115,7 +115,7 @@ is( $monday->day_of_week, 1, "Monday is day 1" );
 {
 
     # time zone offset should not affect the values returned
-    my $d = DateTime::Moment->new(
+    my $d = DateTimeX::Moment->new(
         year      => 2001,
         month     => 7,
         day       => 5,
@@ -136,7 +136,7 @@ is( $monday->day_of_week, 1, "Monday is day 1" );
 }
 
 {
-    my $dt0 = DateTime::Moment->new( year => 1, time_zone => 'UTC' );
+    my $dt0 = DateTimeX::Moment->new( year => 1, time_zone => 'UTC' );
 
     is( $dt0->year,          1,     "year 1 is year 1" );
     is( $dt0->ce_year,       1,     "ce_year 1 is year 1" );
@@ -174,11 +174,11 @@ is( $monday->day_of_week, 1, "Monday is day 1" );
 SKIP: {
     skip 'Time::Moment supports date in anno Domini omly.', 4;
 
-    my $dt_neg = DateTime::Moment->new( year => -10, time_zone => 'UTC', );
+    my $dt_neg = DateTimeX::Moment->new( year => -10, time_zone => 'UTC', );
     is( $dt_neg->year,    -10, "Year -10 is -10" );
     is( $dt_neg->ce_year, -11, "year -10 is ce_year -11" );
 
-    my $dt1 = $dt_neg + DateTime::Moment::Duration->new( years => 10 );
+    my $dt1 = $dt_neg + DateTimeX::Moment::Duration->new( years => 10 );
     is( $dt1->year, 0, "year is 0 after adding ten years to year -10" );
     is(
         $dt1->ce_year, -1,
@@ -187,7 +187,7 @@ SKIP: {
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 50, month  => 2,
         hour => 3,  minute => 20, second => 5,
         time_zone => 'UTC',
@@ -202,7 +202,7 @@ SKIP: {
 
 # test doy in leap year
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2000, month => 1, day => 5,
         time_zone => 'UTC',
     );
@@ -212,7 +212,7 @@ SKIP: {
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2000, month => 2, day => 29,
         time_zone => 'UTC',
     );
@@ -224,7 +224,7 @@ SKIP: {
 SKIP: {
     skip 'Time::Moment supports date in anno Domini omly.', 4;
 
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => -6, month => 2, day => 25,
         time_zone => 'UTC',
     );
@@ -239,28 +239,28 @@ SKIP: {
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 1996, month => 2, day => 1 );
+    my $dt = DateTimeX::Moment->new( year => 1996, month => 2, day => 1 );
 
     is( $dt->quarter,        1,  '->quarter is 1' );
     is( $dt->day_of_quarter, 32, '->day_of_quarter' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 1996, month => 5, day => 1 );
+    my $dt = DateTimeX::Moment->new( year => 1996, month => 5, day => 1 );
 
     is( $dt->quarter,        2,  '->quarter is 2' );
     is( $dt->day_of_quarter, 31, '->day_of_quarter' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 1996, month => 8, day => 1 );
+    my $dt = DateTimeX::Moment->new( year => 1996, month => 8, day => 1 );
 
     is( $dt->quarter,        3,  '->quarter is 3' );
     is( $dt->day_of_quarter, 32, '->day_of_quarter' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 1996, month => 11, day => 1 );
+    my $dt = DateTimeX::Moment->new( year => 1996, month => 11, day => 1 );
 
     is( $dt->quarter,        4,  '->quarter is 4' );
     is( $dt->day_of_quarter, 32, '->day_of_quarter' );
@@ -268,7 +268,7 @@ SKIP: {
 
 # nano, micro, and milli seconds
 {
-    my $dt = DateTime::Moment->new( year => 1996, nanosecond => 500_000_000 );
+    my $dt = DateTimeX::Moment->new( year => 1996, nanosecond => 500_000_000 );
 
     is( $dt->nanosecond,  500_000_000, 'nanosecond is 500,000,000' );
     is( $dt->microsecond, 500_000,     'microsecond is 500,000' );
@@ -300,19 +300,19 @@ SKIP: {
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2003, month => 5, day => 7 );
+    my $dt = DateTimeX::Moment->new( year => 2003, month => 5, day => 7 );
     is( $dt->weekday_of_month, 1, '->weekday_of_month' );
     is( $dt->week_of_month,    2, '->week_of_month' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2003, month => 5, day => 8 );
+    my $dt = DateTimeX::Moment->new( year => 2003, month => 5, day => 8 );
     is( $dt->weekday_of_month, 2, '->weekday_of_month' );
     is( $dt->week_of_month,    2, '->week_of_month' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 1000, hour => 23 );
+    my $dt = DateTimeX::Moment->new( year => 1000, hour => 23 );
     is( $dt->hour,      23, '->hour' );
     is( $dt->hour_1,    23, '->hour_1' );
     is( $dt->hour_12,   11, '->hour_12' );
@@ -320,7 +320,7 @@ SKIP: {
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 1000, hour => 0 );
+    my $dt = DateTimeX::Moment->new( year => 1000, hour => 0 );
     is( $dt->hour,      0,  '->hour' );
     is( $dt->hour_1,    24, '->hour_1' );
     is( $dt->hour_12,   12, '->hour_12' );

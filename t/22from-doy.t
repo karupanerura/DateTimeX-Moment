@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 my @last = ( 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 );
 my @leap_last = @last;
@@ -14,7 +14,7 @@ $leap_last[1]++;
     foreach my $month ( 1 .. 12 ) {
         $doy += $last[ $month - 2 ] if $month > 1;
 
-        my $dt = DateTime::Moment->from_day_of_year(
+        my $dt = DateTimeX::Moment->from_day_of_year(
             year        => 2001,
             day_of_year => $doy,
             time_zone   => 'UTC',
@@ -32,7 +32,7 @@ $leap_last[1]++;
     foreach my $month ( 1 .. 12 ) {
         $doy += $leap_last[ $month - 2 ] if $month > 1;
 
-        my $dt = DateTime::Moment->from_day_of_year(
+        my $dt = DateTimeX::Moment->from_day_of_year(
             year        => 2004,
             day_of_year => $doy,
             time_zone   => 'UTC',
@@ -46,13 +46,13 @@ $leap_last[1]++;
 }
 
 {
-    eval { DateTime::Moment->from_day_of_year( year => 2001, day_of_year => 366 ) };
+    eval { DateTimeX::Moment->from_day_of_year( year => 2001, day_of_year => 366 ) };
     like(
         $@, qr/out of the range/,
         "Cannot give day of year 366 in non-leap years"
     );
 
-    eval { DateTime::Moment->from_day_of_year( year => 2004, day_of_year => 366 ) };
+    eval { DateTimeX::Moment->from_day_of_year( year => 2004, day_of_year => 366 ) };
     ok( !$@, "Day of year 366 should work in leap years" );
 }
 

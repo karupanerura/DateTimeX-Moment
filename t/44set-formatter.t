@@ -4,10 +4,10 @@ use warnings;
 use Test::Fatal;
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 use overload;
 
-my $dt = DateTime::Moment->now;
+my $dt = DateTimeX::Moment->now;
 
 like(
     exception { $dt->set_formatter('Invalid::Formatter') },

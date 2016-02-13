@@ -3,14 +3,14 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
-my $date1 = DateTime::Moment->new(
+my $date1 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 24,
     hour      => 12,   minute => 0,  second => 0,
     time_zone => 'UTC'
 );
-my $date2 = DateTime::Moment->new(
+my $date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 24,
     hour      => 12,   minute => 0,  second => 0,
     time_zone => 'UTC'
@@ -20,42 +20,42 @@ my $date2 = DateTime::Moment->new(
 my $identity = $date1->compare($date2);
 ok( $identity == 0, "Identity comparison" );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 24,
     hour      => 12,   minute => 0,  second => 1,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == -1, 'Comparison $a < $b, 1 second diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 24,
     hour      => 12,   minute => 1,  second => 0,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == -1, 'Comparison $a < $b, 1 minute diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 24,
     hour      => 13,   minute => 0,  second => 0,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == -1, 'Comparison $a < $b, 1 hour diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 25,
     hour      => 12,   minute => 0,  second => 0,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == -1, 'Comparison $a < $b, 1 day diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 11, day    => 24,
     hour      => 12,   minute => 0,  second => 0,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == -1, 'Comparison $a < $b, 1 month diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1998, month  => 10, day    => 24,
     hour      => 12,   minute => 0,  second => 0,
     time_zone => 'UTC'
@@ -64,42 +64,42 @@ ok( $date1->compare($date2) == -1, 'Comparison $a < $b, 1 year diff' );
 
 # $a > $b tests
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 24,
     hour      => 11,   minute => 59, second => 59,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 second diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 24,
     hour      => 11,   minute => 59, second => 0,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 minute diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 24,
     hour      => 11,   minute => 0,  second => 0,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 hour diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 10, day    => 23,
     hour      => 12,   minute => 0,  second => 0,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 day diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1997, month  => 9, day    => 24,
     hour      => 12,   minute => 0, second => 0,
     time_zone => 'UTC'
 );
 ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 month diff' );
 
-$date2 = DateTime::Moment->new(
+$date2 = DateTimeX::Moment->new(
     year      => 1996, month  => 10, day    => 24,
     hour      => 12,   minute => 0,  second => 0,
     time_zone => 'UTC'
@@ -108,45 +108,45 @@ ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 year diff' );
 
 # comparison with floating time
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year      => 1997, month  => 10, day    => 24,
         hour      => 12,   minute => 0,  second => 0,
         time_zone => 'America/Chicago'
     );
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year      => 1997, month  => 10, day    => 24,
         hour      => 12,   minute => 0,  second => 0,
         time_zone => 'floating'
     );
 
     is(
-        DateTime::Moment->compare( $date1, $date2 ), 0,
+        DateTimeX::Moment->compare( $date1, $date2 ), 0,
         'Comparison with floating time (cmp)'
     );
     is( ( $date1 <=> $date2 ), 0, 'Comparison with floating time (<=>)' );
     is( ( $date1 cmp $date2 ), 0, 'Comparison with floating time (cmp)' );
     is(
-        DateTime::Moment->compare_ignore_floating( $date1, $date2 ), 1,
+        DateTimeX::Moment->compare_ignore_floating( $date1, $date2 ), 1,
         'Comparison with floating time (cmp)'
     );
 }
 
 # sub-second
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year => 1997, month  => 10, day    => 24,
         hour => 12,   minute => 0,  second => 0,
         nanosecond => 100,
     );
 
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year => 1997, month  => 10, day    => 24,
         hour => 12,   minute => 0,  second => 0,
         nanosecond => 200,
     );
 
     is(
-        DateTime::Moment->compare( $date1, $date2 ), -1,
+        DateTimeX::Moment->compare( $date1, $date2 ), -1,
         'Comparison with floating time (cmp)'
     );
     is( ( $date1 <=> $date2 ), -1, 'Comparison with floating time (<=>)' );
@@ -154,26 +154,26 @@ ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 year diff' );
 }
 
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year => 2000, month  => 10, day    => 24,
         hour => 12,   minute => 0,  second => 0,
         nanosecond => 10000,
     );
 
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year => 2000, month  => 10, day    => 24,
         hour => 12,   minute => 0,  second => 0,
         nanosecond => 10000,
     );
 
     is(
-        DateTime::Moment->compare( $date1, $date2 ), 0,
+        DateTimeX::Moment->compare( $date1, $date2 ), 0,
         'Comparison with floating time (cmp)'
     );
     is( ( $date1 <=> $date2 ), 0, 'Comparison with floating time (<=>)' );
     is( ( $date1 cmp $date2 ), 0, 'Comparison with floating time (cmp)' );
     is(
-        DateTime::Moment->compare_ignore_floating( $date1, $date2 ), 0,
+        DateTimeX::Moment->compare_ignore_floating( $date1, $date2 ), 0,
         'Comparison with compare_ignore_floating (cmp)'
     );
 }
@@ -188,7 +188,7 @@ ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 year diff' );
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 1950 );
+    my $dt = DateTimeX::Moment->new( year => 1950 );
     my @values = $dt->utc_rd_values;
 
     $values[2] += 50;

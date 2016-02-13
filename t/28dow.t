@@ -3,10 +3,10 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $dt = DateTime::Moment->new( year => 1 );
+    my $dt = DateTimeX::Moment->new( year => 1 );
 
     is( $dt->year,        1, 'year is 1' );
     is( $dt->month,       1, 'month is 1' );
@@ -15,7 +15,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 1, month => 12, day => 31 );
+    my $dt = DateTimeX::Moment->new( year => 1, month => 12, day => 31 );
 
     is( $dt->year,        1,  'year is 1' );
     is( $dt->month,       12, 'month is 12' );
@@ -25,7 +25,7 @@ use DateTime::Moment;
 
 SKIP: {
     skip 'Time::Moment supports date in anno Domini omly', 4;
-    my $dt = DateTime::Moment->new( year => -1 );
+    my $dt = DateTimeX::Moment->new( year => -1 );
 
     is( $dt->year,        -1, 'year is -1' );
     is( $dt->month,       1,  'month is 1' );
@@ -34,7 +34,7 @@ SKIP: {
 }
 
 {
-    my $dt = DateTime::Moment->new( year => 2 );
+    my $dt = DateTimeX::Moment->new( year => 2 );
 
     is( $dt->year,        2, 'year is 2' );
     is( $dt->month,       1, 'month is 1' );

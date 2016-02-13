@@ -5,7 +5,7 @@ use utf8;
 
 use Test::More 0.96;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 use DateTime::Locale;
 
 test_strftime_for_locale( 'en-US', en_tests() );
@@ -15,7 +15,7 @@ test_strftime_for_locale( 'it',    it_tests() );
 subtest(
     'strftime with multiple params',
     sub {
-        my $dt = DateTime::Moment->new(
+        my $dt = DateTimeX::Moment->new(
             year      => 1800,
             month     => 1,
             day       => 10,
@@ -34,7 +34,7 @@ subtest(
 subtest(
     'hour formatting',
     sub {
-        my $dt = DateTime::Moment->new(
+        my $dt = DateTimeX::Moment->new(
             year   => 2003,
             hour   => 0,
             minute => 0
@@ -115,7 +115,7 @@ subtest(
     '%V',
     sub {
         is(
-            DateTime::Moment->new( year => 2003, month => 1, day => 1 )
+            DateTimeX::Moment->new( year => 2003, month => 1, day => 1 )
                 ->strftime('%V'),
             '01', '%V is 01'
         );
@@ -125,7 +125,7 @@ subtest(
 subtest(
     '%% and %{method}',
     sub {
-        my $dt = DateTime::Moment->new(
+        my $dt = DateTimeX::Moment->new(
             year => 2004, month  => 8,  day        => 16,
             hour => 15,   minute => 30, nanosecond => 123456789,
             locale => 'en',
@@ -150,7 +150,7 @@ subtest(
             sub {
                 # Internally this becomes 119999885 nanoseconds (floating point math is awesome)
                 my $epoch = 1297777805.12;
-                my $dt = DateTime::Moment->from_epoch( epoch => $epoch );
+                my $dt = DateTimeX::Moment->from_epoch( epoch => $epoch );
 
                 my @vals = (
                     1,
@@ -177,7 +177,7 @@ subtest(
         subtest(
             'nanosecond rounding in strftime',
             sub {
-                my $dt = DateTime::Moment->new(
+                my $dt = DateTimeX::Moment->new(
                     'year'     => 1999,
                     month      => 9,
                     day        => 7,
@@ -206,7 +206,7 @@ subtest(
 subtest(
     '0 nanoseconds',
     sub {
-        my $dt = DateTime::Moment->new( year => 2011 );
+        my $dt = DateTimeX::Moment->new( year => 2011 );
 
         for my $i ( 1 .. 9 ) {
             my $spec   = '%' . $i . 'N';
@@ -223,7 +223,7 @@ subtest(
 subtest(
     'week-year formatting',
     sub {
-        my $dt = DateTime::Moment->new( 'year' => 2012, month => 1, day => 1 );
+        my $dt = DateTimeX::Moment->new( 'year' => 2012, month => 1, day => 1 );
         subtest(
             $dt->ymd,
             sub {
@@ -241,7 +241,7 @@ subtest(
             }
         );
 
-        $dt = DateTime::Moment->new( 'year' => 2012, month => 1, day => 10 );
+        $dt = DateTimeX::Moment->new( 'year' => 2012, month => 1, day => 10 );
         subtest(
             $dt->ymd,
             sub {
@@ -267,7 +267,7 @@ sub test_strftime_for_locale {
     my $locale = shift;
     my $tests  = shift;
 
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year       => 1999,
         month      => 9,
         day        => 7,

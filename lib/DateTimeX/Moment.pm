@@ -1,4 +1,4 @@
-package DateTime::Moment;
+package DateTimeX::Moment;
 use 5.008001;
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 our $VERSION = "0.01";
 
 use Time::Moment;
-use DateTime::Moment::Duration;
+use DateTimeX::Moment::Duration;
 use DateTime::Locale;
 use DateTime::TimeZone;
 use Scalar::Util qw/blessed/;
@@ -450,7 +450,7 @@ sub subtract_datetime {
         $months--;
     }
 
-    return DateTime::Moment::Duration->new(
+    return DateTimeX::Moment::Duration->new(
         months      => $sign * $months,
         days        => $sign * $days,
         minutes     => $sign * $minutes,
@@ -474,7 +474,7 @@ sub subtract_datetime_absolute {
     my $seconds     = $rhs_moment->delta_seconds($lhs_moment);
     my $nanoseconds = $rhs_moment->delta_nanoseconds($lhs_moment) % 1_000_000_000;
 
-    return DateTime::Moment::Duration->new(
+    return DateTimeX::Moment::Duration->new(
         seconds     => $sign * $seconds,
         nanoseconds => $sign * $nanoseconds,
     );
@@ -497,7 +497,7 @@ sub _string_compare_overload {
     return undef unless defined $rhs;
     goto \&_compare_overload if _isa_datetime_compareble($rhs);
 
-    # One is a DateTime::Moment object, one isn't. Just stringify and compare.
+    # One is a DateTimeX::Moment object, one isn't. Just stringify and compare.
     my $sign = $flip ? -1 : 1;
     return $sign * ("$lhs" cmp "$rhs");
 }
@@ -540,7 +540,7 @@ sub _subtract_overload {
     my $class = ref $date1;
     Carp::croak(
         "Cannot subtract $date2 from a $class object ($date1).\n"
-        . ' Only a DateTime::Duration or DateTime::Moment object can '
+        . ' Only a DateTime::Duration or DateTimeX::Moment object can '
         . " be subtracted from a $class object." );
 }
 
@@ -552,7 +552,7 @@ sub _compare {
     return undef unless defined $rhs;
 
     if (!_isa_datetime_compareble($lhs) || !_isa_datetime_compareble($rhs)) {
-        Carp::croak("A DateTime::Moment object can only be compared to another DateTime::Moment object ($lhs, $rhs).");
+        Carp::croak("A DateTimeX::Moment object can only be compared to another DateTimeX::Moment object ($lhs, $rhs).");
     }
 
     if (!$consistent && $lhs->can('time_zone') && $rhs->can('time_zone')) {
@@ -646,7 +646,7 @@ sub delta_ms {
     my ($lhs, $rhs) = reverse sort { $a <=> $b } @_;
     my $days = floor($lhs->{_moment}->jd - $rhs->{_moment}->jd);
     my $duration = $lhs->subtract_datetime($rhs);
-    return DateTime::Moment::Duration->new(
+    return DateTimeX::Moment::Duration->new(
         hours   => $duration->hours + ($days * 24),
         minutes => $duration->minutes,
         seconds => $duration->seconds,
@@ -683,7 +683,7 @@ sub _delta {
         $diff *= 1_000;
     }
 
-    return DateTime::Moment::Duration->new($unit => $diff);
+    return DateTimeX::Moment::Duration->new($unit => $diff);
 }
 
 # strftime
@@ -818,7 +818,7 @@ sub add_duration {
     return $self if $duration->is_zero;
 
     if (!$duration->is_limit_mode) {
-        Carp::croak 'DateTime::Moment supports limit mode only.';
+        Carp::croak 'DateTimeX::Moment supports limit mode only.';
     }
 
     return $self->add($duration->deltas);
@@ -889,13 +889,13 @@ __END__
 
 =head1 NAME
 
-DateTime::Moment - DateTime like interface for Time::Moment
+DateTimeX::Moment - DateTime like interface for Time::Moment
 
 =head1 SYNOPSIS
 
-  use DateTime::Moment;
+  use DateTimeX::Moment;
 
-  $dt = DateTime::Moment->new(
+  $dt = DateTimeX::Moment->new(
       year       => 1964,
       month      => 10,
       day        => 16,
@@ -906,8 +906,8 @@ DateTime::Moment - DateTime like interface for Time::Moment
       time_zone  => 'Asia/Taipei',
   );
 
-  $dt = DateTime::Moment->from_epoch( epoch => $epoch );
-  $dt = DateTime::Moment->now; # same as ( epoch => time() )
+  $dt = DateTimeX::Moment->from_epoch( epoch => $epoch );
+  $dt = DateTimeX::Moment->now; # same as ( epoch => time() )
 
   $year   = $dt->year;
   $month  = $dt->month;          # 1-12

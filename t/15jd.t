@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 # Borrowed from Matt Sergeant's Time::Piece
 
@@ -75,7 +75,7 @@ my @mjd = (
 );
 
 while ( my ( $mjd, $comps ) = splice @mjd, 0, 2 ) {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         %$comps,
         time_zone => 'UTC',
     );

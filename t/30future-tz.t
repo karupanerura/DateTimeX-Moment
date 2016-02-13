@@ -3,12 +3,12 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 #
 # This test exercises a bug that occurred when date math did not
 # always make sure to update the utc_year attribute of the given
-# DateTime::Moment.  The sympton was that the time zone future span generation
+# DateTimeX::Moment.  The sympton was that the time zone future span generation
 # would fail because utc_year was less than the span's max_year, so
 # span generation wouldn't actually do anything, and it would die with
 # "Invalid local time".
@@ -37,7 +37,7 @@ use DateTime::Moment;
         ],
         ) {
 
-        my $dt = DateTime::Moment->now->set( hour => 12 )->set_time_zone( $add->[3] );
+        my $dt = DateTimeX::Moment->now->set( hour => 12 )->set_time_zone( $add->[3] );
 
         my $new
             = eval { $dt->clone->add( $add->[0], $add->[1] * $add->[2] ) };

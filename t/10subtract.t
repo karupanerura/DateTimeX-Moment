@@ -3,17 +3,17 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year => 2001, month  => 5, day    => 10,
         hour => 4,    minute => 3, second => 2,
         nanosecond => 12,
         time_zone  => 'UTC'
     );
 
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year => 2001, month  => 6, day    => 12,
         hour => 5,    minute => 7, second => 23,
         nanosecond => 7,
@@ -42,13 +42,13 @@ use DateTime::Moment;
 }
 
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year      => 2001, month  => 5, day    => 10,
         hour      => 4,    minute => 3, second => 2,
         time_zone => 'UTC'
     );
 
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year      => 2001, month  => 6, day    => 12,
         hour      => 5,    minute => 7, second => 23,
         time_zone => 'UTC'
@@ -78,12 +78,12 @@ use DateTime::Moment;
         'date minus itself should have no delta seconds'
     );
 
-    my $new = $date1 - DateTime::Moment::Duration->new( years => 2 );
+    my $new = $date1 - DateTimeX::Moment::Duration->new( years => 2 );
     is( $new->datetime, '1999-05-10T04:03:02', 'test - overloading' );
 }
 
 {
-    my $d = DateTime::Moment->new(
+    my $d = DateTimeX::Moment->new(
         year      => 2001, month  => 10, day    => 19,
         hour      => 5,    minute => 1,  second => 1,
         time_zone => 'UTC'
@@ -107,13 +107,13 @@ use DateTime::Moment;
 
 # based on bug report from Eric Cholet
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2003, month  => 2, day    => 9,
         hour => 0,    minute => 0, second => 1,
         time_zone => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 2003, month  => 2,  day    => 7,
         hour => 23,   minute => 59, second => 59,
         time_zone => 'UTC',
@@ -130,7 +130,7 @@ use DateTime::Moment;
     my $dt3 = $dt2 + $dur1;
 
     is(
-        DateTime::Moment->compare( $dt1, $dt3 ), 0,
+        DateTimeX::Moment->compare( $dt1, $dt3 ), 0,
         'adding difference back to dt1 should give same datetime'
     );
 
@@ -145,14 +145,14 @@ use DateTime::Moment;
     my $dt4 = $dt1 + $dur2;
 
     is(
-        DateTime::Moment->compare( $dt2, $dt4 ), 0,
+        DateTimeX::Moment->compare( $dt2, $dt4 ), 0,
         'adding difference back to dt2 should give same datetime'
     );
 }
 
 # test if the day changes because of a nanosecond subtract
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 2001, month  => 6, day    => 12,
         hour      => 0,    minute => 0, second => 0,
         time_zone => 'UTC'
@@ -167,14 +167,14 @@ use DateTime::Moment;
 
 # test for a bug when nanoseconds were greater in earlier datetime
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 10, second => 0,
         nanosecond => 1,
         time_zone  => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 6,
         hour => 0,    minute => 10, second => 0,
         nanosecond => 0,
@@ -193,14 +193,14 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 10, second => 0,
         nanosecond => 20,
         time_zone  => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 10, second => 0,
         nanosecond => 10,
@@ -216,14 +216,14 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 11, second => 0,
         nanosecond => 20,
         time_zone  => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 10, second => 0,
         nanosecond => 10,
@@ -240,14 +240,14 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 10, second => 0,
         nanosecond => 20,
         time_zone  => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 11, second => 0,
         nanosecond => 10,
@@ -263,14 +263,14 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 11, second => 0,
         nanosecond => 10,
         time_zone  => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 10, second => 0,
         nanosecond => 20,
@@ -289,7 +289,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2000, month  => 1,  day    => 5,
         hour => 0,    minute => 11, second => 0,
         nanosecond => 20,
@@ -306,7 +306,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new( year => 2003, month => 12, day => 31 );
+    my $dt1 = DateTimeX::Moment->new( year => 2003, month => 12, day => 31 );
     my $dt2 = $dt1->clone->subtract( months => 1 );
 
     is( $dt2->year,  2003, '2003-12-31 - 1 month = 2003-11-30' );
@@ -315,14 +315,14 @@ use DateTime::Moment;
 }
 
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year => 2001, month  => 5, day    => 10,
         hour => 4,    minute => 3, second => 2,
         nanosecond => 12,
         time_zone  => 'UTC'
     );
 
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year => 2001, month  => 6, day    => 12,
         hour => 5,    minute => 7, second => 23,
         nanosecond => 7,
@@ -341,13 +341,13 @@ use DateTime::Moment;
 }
 
 {
-    my $date1 = DateTime::Moment->new(
+    my $date1 = DateTimeX::Moment->new(
         year      => 2001, month  => 5, day    => 10,
         hour      => 4,    minute => 3, second => 2,
         time_zone => 'UTC'
     );
 
-    my $date2 = DateTime::Moment->new(
+    my $date2 = DateTimeX::Moment->new(
         year      => 2001, month  => 6, day    => 12,
         hour      => 5,    minute => 7, second => 23,
         time_zone => 'UTC'
@@ -362,17 +362,17 @@ use DateTime::Moment;
 }
 
 {
-    my $date1 = DateTime::Moment->new( year => 2003, month => 9,  day => 30 );
-    my $date2 = DateTime::Moment->new( year => 2003, month => 10, day => 1 );
+    my $date1 = DateTimeX::Moment->new( year => 2003, month => 9,  day => 30 );
+    my $date2 = DateTimeX::Moment->new( year => 2003, month => 10, day => 1 );
 
-    my $date3 = DateTime::Moment->new( year => 2003, month => 10, day => 31 );
-    my $date4 = DateTime::Moment->new( year => 2003, month => 11, day => 1 );
+    my $date3 = DateTimeX::Moment->new( year => 2003, month => 10, day => 31 );
+    my $date4 = DateTimeX::Moment->new( year => 2003, month => 11, day => 1 );
 
-    my $date5 = DateTime::Moment->new( year => 2003, month => 2, day => 28 );
-    my $date6 = DateTime::Moment->new( year => 2003, month => 3, day => 1 );
+    my $date5 = DateTimeX::Moment->new( year => 2003, month => 2, day => 28 );
+    my $date6 = DateTimeX::Moment->new( year => 2003, month => 3, day => 1 );
 
-    my $date7 = DateTime::Moment->new( year => 2003, month => 1, day => 31 );
-    my $date8 = DateTime::Moment->new( year => 2003, month => 2, day => 1 );
+    my $date7 = DateTimeX::Moment->new( year => 2003, month => 1, day => 31 );
+    my $date8 = DateTimeX::Moment->new( year => 2003, month => 2, day => 1 );
 
     foreach my $p (
         [ $date1, $date2 ],
@@ -393,12 +393,12 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2005, month => 6, day => 11,
         time_zone => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 2005, month => 11, day => 10,
         time_zone => 'UTC',
     );
@@ -410,7 +410,7 @@ use DateTime::Moment;
     is( $deltas{minutes}, 0,  '0 minutes - smaller day > bigger day' );
 
     is(
-        DateTime::Moment->compare( $dt1->clone->add_duration($dur), $dt2 ), 0,
+        DateTimeX::Moment->compare( $dt1->clone->add_duration($dur), $dt2 ), 0,
         '$dt1 + $dur == $dt2'
     );
 
@@ -419,12 +419,12 @@ use DateTime::Moment;
 }
 
 {
-    my $dt1 = DateTime::Moment->new(
+    my $dt1 = DateTimeX::Moment->new(
         year => 2005, month => 6, day => 11,
         time_zone => 'UTC',
     );
 
-    my $dt2 = DateTime::Moment->new(
+    my $dt2 = DateTimeX::Moment->new(
         year => 2005, month => 11, day => 10,
         time_zone => 'UTC',
     );
@@ -436,17 +436,17 @@ use DateTime::Moment;
     is( $deltas{minutes}, 0,   '0 minutes - smaller day > bigger day' );
 
     is(
-        DateTime::Moment->compare( $dt1->clone->add_duration($dur), $dt2 ), 0,
+        DateTimeX::Moment->compare( $dt1->clone->add_duration($dur), $dt2 ), 0,
         '$dt1 + $dur == $dt2'
     );
     is(
-        DateTime::Moment->compare( $dt2->clone->subtract_duration($dur), $dt1 ), 0,
+        DateTimeX::Moment->compare( $dt2->clone->subtract_duration($dur), $dt1 ), 0,
         '$dt2 - $dur == $dt1'
     );
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 2012,
         month     => 6,
         day       => 30,
@@ -463,7 +463,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 2014,
         month     => 7,
         day       => 3,

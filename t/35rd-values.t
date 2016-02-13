@@ -3,10 +3,10 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year       => 2000,
         hour       => 1,
         nanosecond => 500,
@@ -28,7 +28,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year       => 2000,
         hour       => 1,
         nanosecond => 500,

@@ -3,12 +3,12 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
 
     # Tests creating objects from epoch time
-    my $t1 = DateTime::Moment->from_epoch( epoch => 0 );
+    my $t1 = DateTimeX::Moment->from_epoch( epoch => 0 );
     is( $t1->epoch, 0, "epoch should be 0" );
 
     is( $t1->second, 0,    "seconds are correct on epoch 0" );
@@ -20,7 +20,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->from_epoch( epoch => '3600' );
+    my $dt = DateTimeX::Moment->from_epoch( epoch => '3600' );
     is(
         $dt->epoch, 3600,
         'creation test from epoch = 3600 (compare to epoch)'
@@ -31,15 +31,15 @@ use DateTime::Moment;
 
     # these tests could break if the time changed during the next three lines
     my $now      = time;
-    my $nowtest  = DateTime::Moment->now();
-    my $nowtest2 = DateTime::Moment->from_epoch( epoch => $now );
+    my $nowtest  = DateTimeX::Moment->now();
+    my $nowtest2 = DateTimeX::Moment->from_epoch( epoch => $now );
     is( $nowtest->hour,   $nowtest2->hour,   "Hour: Create without args" );
     is( $nowtest->month,  $nowtest2->month,  "Month : Create without args" );
     is( $nowtest->minute, $nowtest2->minute, "Minute: Create without args" );
 }
 
 {
-    my $epochtest = DateTime::Moment->from_epoch( epoch => '997121000' );
+    my $epochtest = DateTimeX::Moment->from_epoch( epoch => '997121000' );
 
     is(
         $epochtest->epoch, 997121000,
@@ -50,7 +50,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->from_epoch( epoch => 3600 );
+    my $dt = DateTimeX::Moment->from_epoch( epoch => 3600 );
     $dt->set_time_zone('+0100');
 
     is( $dt->epoch, 3600, 'epoch is 3600' );
@@ -59,7 +59,7 @@ use DateTime::Moment;
 
 {
 
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1970,
         month     => 1,
         day       => 1,
@@ -72,7 +72,7 @@ use DateTime::Moment;
 
 {
 
-    my $dt = DateTime::Moment->from_epoch(
+    my $dt = DateTimeX::Moment->from_epoch(
         epoch     => 0,
         time_zone => '-0100',
     );
@@ -84,7 +84,7 @@ use DateTime::Moment;
 # Adding/subtracting should affect epoch
 {
     my $expected = 1049160602;
-    my $epochtest = DateTime::Moment->from_epoch( epoch => $expected );
+    my $epochtest = DateTimeX::Moment->from_epoch( epoch => $expected );
 
     is(
         $epochtest->epoch, $expected,
@@ -105,7 +105,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->from_epoch( epoch => 0.5 );
+    my $dt = DateTimeX::Moment->from_epoch( epoch => 0.5 );
     is(
         $dt->nanosecond, 500_000_000,
         'nanosecond should be 500,000,000 with 0.5 as epoch'
@@ -116,17 +116,17 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->from_epoch( epoch => 0.1234567 );
+    my $dt = DateTimeX::Moment->from_epoch( epoch => 0.1234567 );
     is( $dt->nanosecond, 123_457_000, 'nanosecond should be an integer ');
 }
 
 {
     is(
-        DateTime::Moment->new( year => 1904 )->epoch, -2082844800,
+        DateTimeX::Moment->new( year => 1904 )->epoch, -2082844800,
         "epoch should work back to at least 1904"
     );
 
-    my $dt = DateTime::Moment->from_epoch( epoch => -2082844800 );
+    my $dt = DateTimeX::Moment->from_epoch( epoch => -2082844800 );
     is( $dt->year,  1904, 'year should be 1904' );
     is( $dt->month, 1,    'month should be 1904' );
     is( $dt->day,   1,    'day should be 1904' );
@@ -143,7 +143,7 @@ use DateTime::Moment;
         my ( $year, $epoch ) = @{$pair};
 
         is(
-            DateTime::Moment->new( year => $year )->epoch, $epoch,
+            DateTimeX::Moment->new( year => $year )->epoch, $epoch,
             "epoch for $year is $epoch"
         );
     }
@@ -162,17 +162,17 @@ use DateTime::Moment;
 {
     my $time = Number::Overloaded->new(12345);
 
-    my $dt = DateTime::Moment->from_epoch( epoch => $time );
+    my $dt = DateTimeX::Moment->from_epoch( epoch => $time );
     is( $dt->epoch, 12345, 'can pass overloaded object to from_epoch' );
 
     $time = Number::Overloaded->new(12345.1234);
-    $dt = DateTime::Moment->from_epoch( epoch => $time );
+    $dt = DateTimeX::Moment->from_epoch( epoch => $time );
     is( $dt->epoch, 12345, 'decimal epoch in overloaded object' );
 }
 
 {
     my $time = Number::Overloaded->new(-12345);
-    my $dt = DateTime::Moment->from_epoch( epoch => $time );
+    my $dt = DateTimeX::Moment->from_epoch( epoch => $time );
 
     is( $dt->epoch, -12345, 'negative epoch in overloaded object' );
 }
@@ -185,7 +185,7 @@ use DateTime::Moment;
     );
 
     for my $test (@tests) {
-        eval { DateTime::Moment->from_epoch( epoch => $test ); };
+        eval { DateTimeX::Moment->from_epoch( epoch => $test ); };
 
         like(
             $@, qr/isn't numeric in subroutine entry/,

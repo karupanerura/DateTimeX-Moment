@@ -3,8 +3,8 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
-use DateTime::Moment::Duration;
+use DateTimeX::Moment;
+use DateTimeX::Moment::Duration;
 
 {
     my %pairs = (
@@ -18,7 +18,7 @@ use DateTime::Moment::Duration;
         nanoseconds => 9,
     );
 
-    my $dur = DateTime::Moment::Duration->new(%pairs);
+    my $dur = DateTimeX::Moment::Duration->new(%pairs);
 
     while ( my ( $unit, $val ) = each %pairs ) {
         is( $dur->$unit(), $val, "$unit should be $val" );
@@ -86,7 +86,7 @@ use DateTime::Moment::Duration;
         nanoseconds => 9,
     );
 
-    my $dur = DateTime::Moment::Duration->new( %pairs );
+    my $dur = DateTimeX::Moment::Duration->new( %pairs );
 
     my $calendar_dur = $dur->calendar_duration;
     is( $calendar_dur->delta_months,  14, "date - delta_months is 14" );
@@ -107,17 +107,17 @@ use DateTime::Moment::Duration;
 }
 
 {
-    my $dur = DateTime::Moment::Duration->new( days => 1 );
+    my $dur = DateTimeX::Moment::Duration->new( days => 1 );
     ok( $dur->is_limit_mode, "limit mode" );
 }
 
-my $leap_day = DateTime::Moment->new(
+my $leap_day = DateTimeX::Moment->new(
     year => 2004, month => 2, day => 29,
     time_zone => 'UTC',
 );
 
 {
-    my $new = $leap_day + DateTime::Moment::Duration->new(
+    my $new = $leap_day + DateTimeX::Moment::Duration->new(
         years        => 1,
     );
 
@@ -125,7 +125,7 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $inverse = DateTime::Moment::Duration->new(
+    my $inverse = DateTimeX::Moment::Duration->new(
         years => 1, months  => 1,
         weeks => 1, days    => 1,
         hours => 1, minutes => 2, seconds => 3,
@@ -162,7 +162,7 @@ my $leap_day = DateTime::Moment->new(
         'inverse method uses default end_of_month_mode without explicit parameter'
     );
 
-    my $inverse2 = DateTime::Moment::Duration->new( years => 1 )
+    my $inverse2 = DateTimeX::Moment::Duration->new( years => 1 )
         ->inverse();
 
     is(
@@ -172,9 +172,9 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $dur1 = DateTime::Moment::Duration->new( months => 6, days => 10 );
+    my $dur1 = DateTimeX::Moment::Duration->new( months => 6, days => 10 );
 
-    my $dur2 = DateTime::Moment::Duration->new( months => 3, days => 7 );
+    my $dur2 = DateTimeX::Moment::Duration->new( months => 3, days => 7 );
 
     my $new1 = $dur1 + $dur2;
     is( $new1->delta_months, 9,  'test + overloading' );
@@ -190,7 +190,7 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $dur1 = DateTime::Moment::Duration->new( months => 6, days => 10 );
+    my $dur1 = DateTimeX::Moment::Duration->new( months => 6, days => 10 );
 
     my $new1 = $dur1 * 4;
     is( $new1->delta_months, 24, 'test * overloading' );
@@ -202,13 +202,13 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $dur1 = DateTime::Moment::Duration->new(
+    my $dur1 = DateTimeX::Moment::Duration->new(
         months      => 6, days => 10, seconds => 3,
         nanoseconds => 1_200_300_400
     );
 
     my $dur2
-        = DateTime::Moment::Duration->new( seconds => 1, nanoseconds => 500_000_000 );
+        = DateTimeX::Moment::Duration->new( seconds => 1, nanoseconds => 500_000_000 );
 
     is( $dur1->delta_seconds,     4,           'test nanoseconds overflow' );
     is( $dur1->delta_nanoseconds, 200_300_400, 'test nanoseconds remainder' );
@@ -243,14 +243,14 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $dur = DateTime::Moment::Duration->new( nanoseconds => -10 );
+    my $dur = DateTimeX::Moment::Duration->new( nanoseconds => -10 );
     is( $dur->nanoseconds,       10,  'nanoseconds is 10' );
     is( $dur->delta_nanoseconds, -10, 'delta_nanoseconds is -10' );
     ok( $dur->is_negative, 'duration is negative' );
 }
 
 {
-    my $dur = DateTime::Moment::Duration->new( days => 0 );
+    my $dur = DateTimeX::Moment::Duration->new( days => 0 );
     is( $dur->delta_days, 0, 'delta_days is 0' );
     ok( !$dur->is_positive, 'not positive' );
     ok( $dur->is_zero,      'is zero' );
@@ -259,15 +259,15 @@ my $leap_day = DateTime::Moment->new(
 
 {
     eval {
-        DateTime::Moment::Duration->new( months => 3 )->add( hours => -3 )
+        DateTimeX::Moment::Duration->new( months => 3 )->add( hours => -3 )
             ->add( minutes => 1 );
     };
     ok( !$@, 'method chaining should work' );
 }
 
 {
-    my $min_1  = DateTime::Moment::Duration->new( minutes => 1 );
-    my $hour_1 = DateTime::Moment::Duration->new( hours   => 1 );
+    my $min_1  = DateTimeX::Moment::Duration->new( minutes => 1 );
+    my $hour_1 = DateTimeX::Moment::Duration->new( hours   => 1 );
 
     my $min_59 = $hour_1 - $min_1;
 
@@ -287,8 +287,8 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $dur1 = DateTime::Moment::Duration->new( minutes => 10 );
-    my $dur2 = DateTime::Moment::Duration->new( minutes => 20 );
+    my $dur1 = DateTimeX::Moment::Duration->new( minutes => 10 );
+    my $dur2 = DateTimeX::Moment::Duration->new( minutes => 20 );
 
     eval { my $x = 1 if $dur1 <=> $dur2 };
     like(
@@ -297,13 +297,13 @@ my $leap_day = DateTime::Moment->new(
     );
 
     is(
-        DateTime::Moment::Duration->compare( $dur1, $dur2 ), -1,
+        DateTimeX::Moment::Duration->compare( $dur1, $dur2 ), -1,
         '20 minutes is greater than 10 minutes'
     );
 
     is(
-        DateTime::Moment::Duration->compare(
-            $dur1, $dur2, DateTime::Moment->new( year => 1 )
+        DateTimeX::Moment::Duration->compare(
+            $dur1, $dur2, DateTimeX::Moment->new( year => 1 )
         ),
         -1,
         '20 minutes is greater than 10 minutes'
@@ -311,30 +311,30 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $dur1 = DateTime::Moment::Duration->new( days   => 29 );
-    my $dur2 = DateTime::Moment::Duration->new( months => 1 );
+    my $dur1 = DateTimeX::Moment::Duration->new( days   => 29 );
+    my $dur2 = DateTimeX::Moment::Duration->new( months => 1 );
 
-    my $base = DateTime::Moment->new( year => 2004 );
+    my $base = DateTimeX::Moment->new( year => 2004 );
     is(
-        DateTime::Moment::Duration->compare( $dur1, $dur2, $base ), -1,
+        DateTimeX::Moment::Duration->compare( $dur1, $dur2, $base ), -1,
         '29 days is less than 1 month with base of 2004-01-01'
     );
 
-    $base = DateTime::Moment->new( year => 2004, month => 2 );
+    $base = DateTimeX::Moment->new( year => 2004, month => 2 );
     is(
-        DateTime::Moment::Duration->compare( $dur1, $dur2, $base ), 0,
+        DateTimeX::Moment::Duration->compare( $dur1, $dur2, $base ), 0,
         '29 days is equal to 1 month with base of 2004-02-01'
     );
 
-    $base = DateTime::Moment->new( year => 2005, month => 2 );
+    $base = DateTimeX::Moment->new( year => 2005, month => 2 );
     is(
-        DateTime::Moment::Duration->compare( $dur1, $dur2, $base ), 1,
+        DateTimeX::Moment::Duration->compare( $dur1, $dur2, $base ), 1,
         '29 days is greater than 1 month with base of 2005-02-01'
     );
 }
 
 {
-    my $dur1 = DateTime::Moment::Duration->new(
+    my $dur1 = DateTimeX::Moment::Duration->new(
         nanoseconds => 1_000,
         seconds     => 1,
     );
@@ -356,7 +356,7 @@ my $leap_day = DateTime::Moment->new(
         'normalize nanoseconds to negative'
     );
 
-    my $dur4 = DateTime::Moment::Duration->new(
+    my $dur4 = DateTimeX::Moment::Duration->new(
         seconds     => -1,
         nanoseconds => -2_500_000_000
     );
@@ -369,7 +369,7 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $dur = DateTime::Moment::Duration->new(
+    my $dur = DateTimeX::Moment::Duration->new(
         minutes => 30,
         seconds => -1,
     );
@@ -380,7 +380,7 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    my $dur = DateTime::Moment::Duration->new( minutes => 50 );
+    my $dur = DateTimeX::Moment::Duration->new( minutes => 50 );
 
     is( $dur->in_units('years'),   0, 'in_units returns 0 for years' );
     is( $dur->in_units('months'),  0, 'in_units returns 0 for months' );
@@ -394,9 +394,9 @@ my $leap_day = DateTime::Moment->new(
 }
 
 {
-    local $TODO = 'reject fractional units in DateTime::Moment::Duration->new';
+    local $TODO = 'reject fractional units in DateTimeX::Moment::Duration->new';
 
-    eval { DateTime::Moment::Duration->new( minutes => 50.2 ) };
+    eval { DateTimeX::Moment::Duration->new( minutes => 50.2 ) };
 
     like(
         $@, qr/is an integer/,

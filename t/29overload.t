@@ -4,16 +4,16 @@ use warnings;
 use Test::More;
 use Test::Warnings 0.005 ':all';
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $dt = DateTime::Moment->new( year => 1900, month => 12, day => 1 );
+    my $dt = DateTimeX::Moment->new( year => 1900, month => 12, day => 1 );
 
     is( "$dt", '1900-12-01T00:00:00', 'stringification overloading' );
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2050, month  => 1,  day    => 15,
         hour => 20,   minute => 10, second => 10
     );
@@ -50,7 +50,7 @@ use DateTime::Moment;
     my $after_od  = Other::Date->new($after_string);
     my $before_od = Other::Date->new($before_string);
 
-    ok( $dt eq $same_od, "DateTime::Moment eq non-DateTime::Moment overloaded object true" );
+    ok( $dt eq $same_od, "DateTimeX::Moment eq non-DateTimeX::Moment overloaded object true" );
     ok( !( $dt eq $after_od ), "  eq false" );
     ok( $dt ne $after_od,      "  ne true" );
     ok( !( $dt ne $same_od ),  "  ne false" );
@@ -75,72 +75,72 @@ use DateTime::Moment;
 
     eval { my $x = $dt + 1 };
     like(
-        $@, qr/Cannot add 1 to a DateTime::Moment object/,
-        'Cannot add plain scalar to a DateTime::Moment object'
+        $@, qr/Cannot add 1 to a DateTimeX::Moment object/,
+        'Cannot add plain scalar to a DateTimeX::Moment object'
     );
 
     eval { my $x = $dt + bless {}, 'FooBar' };
     like(
-        $@, qr/Cannot add FooBar=HASH\([^\)]+\) to a DateTime::Moment object/,
-        'Cannot add plain FooBar object to a DateTime::Moment object'
+        $@, qr/Cannot add FooBar=HASH\([^\)]+\) to a DateTimeX::Moment object/,
+        'Cannot add plain FooBar object to a DateTimeX::Moment object'
     );
 
     eval { my $x = $dt - 1 };
     like(
-        $@, qr/Cannot subtract 1 from a DateTime::Moment object/,
-        'Cannot subtract plain scalar from a DateTime::Moment object'
+        $@, qr/Cannot subtract 1 from a DateTimeX::Moment object/,
+        'Cannot subtract plain scalar from a DateTimeX::Moment object'
     );
 
     eval { my $x = $dt - bless {}, 'FooBar' };
     like(
-        $@, qr/Cannot subtract FooBar=HASH\([^\)]+\) from a DateTime::Moment object/,
-        'Cannot subtract plain FooBar object from a DateTime::Moment object'
+        $@, qr/Cannot subtract FooBar=HASH\([^\)]+\) from a DateTimeX::Moment object/,
+        'Cannot subtract plain FooBar object from a DateTimeX::Moment object'
     );
 
     eval { my $x = $dt > 1 };
     like(
         $@,
-        qr/A DateTime::Moment object can only be compared to another DateTime::Moment object/,
-        'Cannot compare a DateTime::Moment object to a scalar'
+        qr/A DateTimeX::Moment object can only be compared to another DateTimeX::Moment object/,
+        'Cannot compare a DateTimeX::Moment object to a scalar'
     );
 
     eval { my $x = $dt > bless {}, 'FooBar' };
     like(
         $@,
-        qr/A DateTime::Moment object can only be compared to another DateTime::Moment object/,
-        'Cannot compare a DateTime::Moment object to a FooBar object'
+        qr/A DateTimeX::Moment object can only be compared to another DateTimeX::Moment object/,
+        'Cannot compare a DateTimeX::Moment object to a FooBar object'
     );
 
     like(
         warning { my $x = undef; $dt > $x; },
         qr/uninitialized value in numeric gt .+ at .*t.(release-pp-)?29overload\.t/,
-        'Comparing undef to a DateTime::Moment object generates a Perl warning at the right spot ($dt > undef)'
+        'Comparing undef to a DateTimeX::Moment object generates a Perl warning at the right spot ($dt > undef)'
     );
 
     like(
         warning { my $x = undef; $x > $dt; },
         qr/uninitialized value in numeric gt .+ at .*t.(release-pp-)?29overload\.t/,
-        'Comparing undef to a DateTime::Moment object generates a Perl warning at the right spot (undef > $dt)'
+        'Comparing undef to a DateTimeX::Moment object generates a Perl warning at the right spot (undef > $dt)'
     );
 
     ok(
         !( $dt eq 'some string' ),
-        'DateTime::Moment object always compares false to a string'
+        'DateTimeX::Moment object always compares false to a string'
     );
 
     ok(
         $dt ne 'some string',
-        'DateTime::Moment object always compares false to a string'
+        'DateTimeX::Moment object always compares false to a string'
     );
 
     ok(
         $dt eq $dt->clone,
-        'DateTime::Moment object is equal to a clone of itself'
+        'DateTimeX::Moment object is equal to a clone of itself'
     );
 
     ok(
         !( $dt ne $dt->clone ),
-        'DateTime::Moment object is equal to a clone of itself (! ne)'
+        'DateTimeX::Moment object is equal to a clone of itself (! ne)'
     );
 }
 

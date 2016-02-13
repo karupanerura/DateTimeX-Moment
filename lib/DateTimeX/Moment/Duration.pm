@@ -1,4 +1,4 @@
-package DateTime::Moment::Duration;
+package DateTimeX::Moment::Duration;
 use strict;
 use warnings;
 
@@ -199,8 +199,8 @@ sub multiply {
 
 sub compare {
     my ($class, $lhs, $rhs, $base) = @_;
-    $base ||= DateTime::Moment->now;
-    return DateTime::Moment->compare(
+    $base ||= DateTimeX::Moment->now;
+    return DateTimeX::Moment->compare(
         $base->clone->add_duration($lhs),
         $base->clone->add_duration($rhs)
     );
@@ -226,7 +226,7 @@ sub _subtract_overload {
     ($lhs, $rhs) = ($rhs, $lhs) if $flip;
 
     if (_isa_datetime($rhs)) {
-        Carp::croak('Cannot subtract a DateTime::Moment object from a DateTime::Moment::Duration object');
+        Carp::croak('Cannot subtract a DateTimeX::Moment object from a DateTimeX::Moment::Duration object');
     }
 
     return $lhs->clone->subtract_duration($rhs);
@@ -238,7 +238,7 @@ sub _multiply_overload {
 }
 
 sub _compare_overload {
-    Carp::croak('DateTime::Moment::Duration does not overload comparison.  See the documentation on the compare() method for details.');
+    Carp::croak('DateTimeX::Moment::Duration does not overload comparison.  See the documentation on the compare() method for details.');
 }
 
 1;
@@ -250,11 +250,11 @@ __END__
 
 =head1 NAME
 
-DateTime::Moment::Duration - TODO
+DateTimeX::Moment::Duration - TODO
 
 =head1 SYNOPSIS
 
-    use DateTime::Moment::Duration;
+    use DateTimeX::Moment::Duration;
 
 =head1 DESCRIPTION
 

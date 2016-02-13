@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More skip_all => 'not yet implemented';
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 my @tests = (
     [ [ 1964, 12, 31 ], [ 1964, 53 ] ],
@@ -38,7 +38,7 @@ foreach my $test (@tests) {
     my @args    = @{ $test->[0] };
     my @results = @{ $test->[1] };
 
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => $args[0],
         month     => $args[1],
         day       => $args[2],

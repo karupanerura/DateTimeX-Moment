@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More skip_all => 'unsupported';
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 use DateTime::Locale;
 
 my $pos        = DateTime::Infinite::Future->new;
@@ -20,14 +20,14 @@ my $nan_string = DateTime::NAN;
     ok( !$neg->is_finite,  'negative infinity should not be finite' );
 
     # that's a long time ago!
-    my $long_ago = DateTime::Moment->new( year => -100_000 );
+    my $long_ago = DateTimeX::Moment->new( year => -100_000 );
 
     ok(
         $neg < $long_ago,
         'negative infinity is really negative'
     );
 
-    my $far_future = DateTime::Moment->new( year => 100_000 );
+    my $far_future = DateTimeX::Moment->new( year => 100_000 );
     ok(
         $pos > $far_future,
         'positive infinity is really positive'
@@ -120,21 +120,21 @@ my $neg_as_string = $neginf . '';
 }
 
 {
-    my $now = DateTime::Moment->now;
+    my $now = DateTimeX::Moment->now;
 
     is(
-        DateTime::Moment->compare( $pos, $now ), 1,
+        DateTimeX::Moment->compare( $pos, $now ), 1,
         'positive infinite is greater than now'
     );
     is(
-        DateTime::Moment->compare( $neg, $now ), -1,
+        DateTimeX::Moment->compare( $neg, $now ), -1,
         'negative infinite is less than now'
     );
 }
 
 {
-    my $now = DateTime::Moment->now;
-    my $pos2 = $pos + DateTime::Moment::Duration->new( months => 1 );
+    my $now = DateTimeX::Moment->now;
+    my $pos2 = $pos + DateTimeX::Moment::Duration->new( months => 1 );
 
     ok(
         $pos == $pos2,
@@ -143,8 +143,8 @@ my $neg_as_string = $neginf . '';
 }
 
 {
-    my $now = DateTime::Moment->now;
-    my $neg2 = $neg + DateTime::Moment::Duration->new( months => 1 );
+    my $now = DateTimeX::Moment->now;
+    my $neg2 = $neg + DateTimeX::Moment::Duration->new( months => 1 );
 
     ok(
         $neg == $neg2,
@@ -178,7 +178,7 @@ my $neg_as_string = $neginf . '';
 
     is(
         $pos->locale()->name(),
-        'Fake locale for Infinite DateTime::Moment objects',
+        'Fake locale for Infinite DateTimeX::Moment objects',
         'locale name for fake locale'
     );
 

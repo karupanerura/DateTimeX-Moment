@@ -3,10 +3,10 @@ use warnings;
 
 use Test::More skip_all => 'unsupported';
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 58, second => 59,
         time_zone => 'UTC'
@@ -18,7 +18,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 29,
         time_zone => 'UTC'
@@ -32,7 +32,7 @@ use DateTime::Moment;
 {
     local $TODO = 'offsets with seconds are broken near leap seconds';
 
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 30,
         time_zone => 'UTC'
@@ -46,7 +46,7 @@ use DateTime::Moment;
 {
     local $TODO = 'offsets with seconds are broken near leap seconds';
 
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 31,
         time_zone => 'UTC'
@@ -60,7 +60,7 @@ use DateTime::Moment;
 {
     local $TODO = 'offsets with seconds are broken near leap seconds';
 
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 6,  day    => 30,
         hour      => 23,   minute => 59, second => 60,
         time_zone => 'UTC'
@@ -72,7 +72,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1997, month  => 7, day    => 1,
         hour      => 0,    minute => 0, second => 0,
         time_zone => 'UTC'

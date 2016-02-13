@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 foreach my $p (
     { year => 2000, month => 13 },
@@ -17,13 +17,13 @@ foreach my $p (
     { year => 2000, month => 12, day => 10, hour => 12, second => -1 },
     { year => 2000, month => 12, day => 10, hour => 12, second => 62 },
     ) {
-    eval { DateTime::Moment->new(%$p) };
+    eval { DateTimeX::Moment->new(%$p) };
     like(
         $@, qr/out of the range/,
         "Parameters outside valid range should fail in call to new()"
     );
 
-    eval { DateTime::Moment->new( year => 2000 )->set(%$p) };
+    eval { DateTimeX::Moment->new( year => 2000 )->set(%$p) };
     like(
         $@, qr/out of the range/,
         "Parameters outside valid range should fail in call to set()"
@@ -31,13 +31,13 @@ foreach my $p (
 }
 
 {
-    eval { DateTime::Moment->last_day_of_month( year => 2000, month => 13 ) };
+    eval { DateTimeX::Moment->last_day_of_month( year => 2000, month => 13 ) };
     like(
         $@, qr/out of the range/,
         "Parameters outside valid range should fail in call to last_day_of_month()"
     );
 
-    eval { DateTime::Moment->last_day_of_month( year => 2000, month => 0 ) };
+    eval { DateTimeX::Moment->last_day_of_month( year => 2000, month => 0 ) };
     like(
         $@, qr/out of the range/,
         "Parameters outside valid range should fail in call to last_day_of_month()"
@@ -45,19 +45,19 @@ foreach my $p (
 }
 
 {
-    eval { DateTime::Moment->new( year => 2000, month => 4, day => 31 ) };
+    eval { DateTimeX::Moment->new( year => 2000, month => 4, day => 31 ) };
     like(
         $@, qr/out of the range/i,
         "Day past last day of month should fail"
     );
 
-    eval { DateTime::Moment->new( year => 2001, month => 2, day => 29 ) };
+    eval { DateTimeX::Moment->new( year => 2001, month => 2, day => 29 ) };
     like(
         $@, qr/out of the range/i,
         "Day past last day of month should fail"
     );
 
-    eval { DateTime::Moment->new( year => 2000, month => 2, day => 29 ) };
+    eval { DateTimeX::Moment->new( year => 2000, month => 2, day => 29 ) };
     ok( !$@, "February 29 should be valid in leap years" );
 }
 

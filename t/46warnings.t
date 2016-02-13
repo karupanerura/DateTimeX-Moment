@@ -4,7 +4,7 @@ use warnings;
 use Test::More skip_all => 'incompatible';
 use Test::Warnings 0.005 ':all';
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 my $year_5001_epoch = 95649120000;
 
@@ -16,27 +16,27 @@ SKIP:
     {
         like(
             warning {
-                DateTime::Moment->from_epoch(
+                DateTimeX::Moment->from_epoch(
                     epoch     => $year_5001_epoch,
                     time_zone => 'Asia/Taipei',
                 );
             },
-            qr{\QYou are creating a DateTime::Moment object with a far future year (5001) and a time zone (Asia/Taipei).},
+            qr{\QYou are creating a DateTimeX::Moment object with a far future year (5001) and a time zone (Asia/Taipei).},
             'got a warning when calling ->from_epoch with a far future epoch and a time_zone'
         );
     }
 
     {
-        no warnings 'DateTime::Moment';
+        no warnings 'DateTimeX::Moment';
         is_deeply(
             warning {
-                DateTime::Moment->from_epoch(
+                DateTimeX::Moment->from_epoch(
                     epoch     => $year_5001_epoch,
                     time_zone => 'Asia/Taipei',
                 );
             },
             [],
-            'no warning when calling ->from_epoch with a far future epoch and a time_zone with DateTime::Moment warnings category suppressed'
+            'no warning when calling ->from_epoch with a far future epoch and a time_zone with DateTimeX::Moment warnings category suppressed'
         );
     }
 }
@@ -44,27 +44,27 @@ SKIP:
 {
     like(
         warning {
-            DateTime::Moment->new(
+            DateTimeX::Moment->new(
                 year      => 5001,
                 time_zone => 'Asia/Taipei',
             );
         },
-        qr{\QYou are creating a DateTime::Moment object with a far future year (5001) and a time zone (Asia/Taipei).},
+        qr{\QYou are creating a DateTimeX::Moment object with a far future year (5001) and a time zone (Asia/Taipei).},
         'got a warning when calling ->new with a far future year and a time_zone'
     );
 }
 
 {
-    no warnings 'DateTime::Moment';
+    no warnings 'DateTimeX::Moment';
     is_deeply(
         warning {
-            DateTime::Moment->new(
+            DateTimeX::Moment->new(
                 year      => 5001,
                 time_zone => 'Asia/Taipei',
             );
         },
         [],
-        'no warning when calling ->new with a far future epoch and a time_zone with DateTime::Moment warnings category suppressed'
+        'no warning when calling ->new with a far future epoch and a time_zone with DateTimeX::Moment warnings category suppressed'
     );
 }
 
@@ -72,7 +72,7 @@ SKIP:
     no warnings;
     is_deeply(
         warning {
-            DateTime::Moment->new(
+            DateTimeX::Moment->new(
                 year      => 5001,
                 time_zone => 'Asia/Taipei',
             );

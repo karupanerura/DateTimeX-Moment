@@ -3,10 +3,10 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 1870, month  => 10, day    => 21,
         hour => 12,   minute => 10, second => 45,
         nanosecond => 123456,
@@ -21,7 +21,7 @@ use DateTime::Moment;
     is( $dt->second,     '45',     "Second accessor, outside the epoch" );
     is( $dt->nanosecond, '123456', "nanosecond accessor, outside the epoch" );
 
-    $dt = DateTime::Moment->from_object( object => $dt );
+    $dt = DateTimeX::Moment->from_object( object => $dt );
     is( $dt->year,       '1870',   "Year should be identical" );
     is( $dt->month,      '10',     "Month should be identical" );
     is( $dt->day,        '21',     "Day should be identical" );
@@ -32,7 +32,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year      => 1870, month  => 10, day    => 21,
         hour      => 12,   minute => 10, second => 45,
         time_zone => 'UTC'

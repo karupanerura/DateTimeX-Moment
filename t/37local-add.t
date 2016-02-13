@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More skip_all => 'incompatible';
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 # These tests should be the final word on dt addition involving a
 # DST-changing time zone
@@ -11,7 +11,7 @@ use DateTime::Moment;
 # time addition is "wait X amount of time, then what does the clock
 # say?"  this means it acts on the UTC components.
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2003, month => 4, day => 6,
         time_zone => 'America/Chicago',
     );
@@ -43,7 +43,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2003, month => 10, day => 26,
         time_zone => 'America/Chicago',
     );
@@ -88,7 +88,7 @@ use DateTime::Moment;
 # date addition is "leave the clock alone, just change the date
 # portion".  this means it acts on local components
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2003, month => 4, day => 6,
         time_zone => 'America/Chicago',
     );
@@ -119,7 +119,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2003, month => 10, day => 26,
         time_zone => 'America/Chicago',
     );
@@ -152,7 +152,7 @@ use DateTime::Moment;
 # date and time addition in one call is still two separate operations.
 # First we do date, then time.
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2003, month => 4, day => 5,
         time_zone => 'America/Chicago',
     );
@@ -179,7 +179,7 @@ use DateTime::Moment;
 }
 
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2003, month => 10, day => 25,
         time_zone => 'America/Chicago',
     );
@@ -205,7 +205,7 @@ use DateTime::Moment;
 
 # an example from the docs
 {
-    my $dt = DateTime::Moment->new(
+    my $dt = DateTimeX::Moment->new(
         year => 2003, month => 4, day => 5,
         hour => 2,
         time_zone => 'America/Chicago',

@@ -3,11 +3,11 @@ use warnings;
 
 use Test::More;
 
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 {
-    my $now   = DateTime::Moment->now;
-    my $today = DateTime::Moment->today;
+    my $now   = DateTimeX::Moment->now;
+    my $today = DateTimeX::Moment->today;
 
     is( $today->year,  $now->year,  'today->year' );
     is( $today->month, $now->month, 'today->month' );

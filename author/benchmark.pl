@@ -8,35 +8,35 @@ use constant epoch => time;
 use Benchmark qw/cmpthese timethese/;
 
 use DateTime;
-use DateTime::Moment;
+use DateTimeX::Moment;
 
 sub hr { say '-' x 40 }
 
 say 'new()';
 cmpthese timethese 100000 => {
     datetime => sub { DateTime->new(year => 2016) },
-    moment   => sub { DateTime::Moment->new(year => 2016) },
+    moment   => sub { DateTimeX::Moment->new(year => 2016) },
 };
 hr();
 
 say 'now()';
 cmpthese timethese 100000 => {
     datetime => sub { DateTime->now },
-    moment   => sub { DateTime::Moment->now },
+    moment   => sub { DateTimeX::Moment->now },
 };
 hr();
 
 say 'from_epoch()';
 cmpthese timethese 100000 => {
     datetime => sub { DateTime->from_epoch(epoch => epoch) },
-    moment   => sub { DateTime::Moment->from_epoch(epoch => epoch) },
+    moment   => sub { DateTimeX::Moment->from_epoch(epoch => epoch) },
 };
 hr();
 
 say 'calculate()';
 cmpthese timethese 100000 => {
     datetime => sub { DateTime->now->add(years => 1) },
-    moment   => sub { DateTime::Moment->now->add(years => 1) },
+    moment   => sub { DateTimeX::Moment->now->add(years => 1) },
 };
 hr();
 
