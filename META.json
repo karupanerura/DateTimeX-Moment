@@ -43,12 +43,12 @@
       },
       "runtime" : {
          "recommends" : {
+            "Data::Util" : "0",
             "DateTime" : "0"
          },
          "requires" : {
             "Class::Accessor::Lite" : "0",
             "Class::Inspector" : "0",
-            "Data::Util" : "0",
             "DateTime::Locale" : "0",
             "DateTime::TimeZone" : "0",
             "List::Util" : "0",
@@ -77,7 +77,7 @@
          "web" : "https://github.com/karupanerura/DateTimeX-Moment"
       }
    },
-   "version" : "0.01",
+   "version" : "0.02",
    "x_authority" : "cpan:KARUPA",
    "x_serialization_backend" : "JSON::PP version 2.27300"
 }
