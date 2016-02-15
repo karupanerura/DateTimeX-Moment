@@ -1,6 +1,5 @@
 requires 'Class::Accessor::Lite';
 requires 'Class::Inspector';
-requires 'Data::Util';
 requires 'DateTime::Locale';
 requires 'DateTime::TimeZone';
 requires 'List::Util';
@@ -9,6 +8,7 @@ requires 'Time::Moment', '0.38';
 requires 'perl', '5.008001';
 
 recommends 'DateTime';
+recommends 'Data::Util';
 
 on configure => sub {
     requires 'Module::Build::Tiny', '0.035';
