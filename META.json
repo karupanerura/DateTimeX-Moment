@@ -4,9 +4,9 @@
       "karupanerura <karupa@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.1, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Minilla/v3.0.1, CPAN::Meta::Converter version 2.150005",
    "license" : [
-      "unknown"
+      "artistic_2"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -53,7 +53,7 @@
             "DateTime::TimeZone" : "0",
             "List::Util" : "0",
             "Scalar::Util" : "0",
-            "Time::Moment" : "0",
+            "Time::Moment" : "0.38",
             "perl" : "5.008001"
          }
       },
@@ -78,5 +78,6 @@
       }
    },
    "version" : "0.01",
-   "x_authority" : "cpan:KARUPA"
+   "x_authority" : "cpan:KARUPA",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }

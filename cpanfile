@@ -5,7 +5,7 @@ requires 'DateTime::Locale';
 requires 'DateTime::TimeZone';
 requires 'List::Util';
 requires 'Scalar::Util';
-requires 'Time::Moment';
+requires 'Time::Moment', '0.38';
 requires 'perl', '5.008001';
 
 recommends 'DateTime';

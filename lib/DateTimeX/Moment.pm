@@ -5,7 +5,7 @@ use warnings;
 
 our $VERSION = "0.01";
 
-use Time::Moment;
+use Time::Moment 0.38;
 use DateTimeX::Moment::Duration;
 use DateTime::Locale;
 use DateTime::TimeZone;
