@@ -2,6 +2,10 @@ Revision history for Perl extension DateTimeX-Moment
 
 {{$NEXT}}
 
+0.03 2016-03-18T10:45:30Z
+
+    - no require DateTime/DateTime::Duration for testing.
+
 0.02 2016-02-15T06:47:15Z
 
     - fixed deps

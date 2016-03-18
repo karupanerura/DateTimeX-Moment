@@ -4,9 +4,9 @@
       "karupanerura <karupa@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.1, CPAN::Meta::Converter version 2.150005",
+   "generated_by" : "Minilla/v3.0.1, CPAN::Meta::Converter version 2.150001",
    "license" : [
-      "artistic_2"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -77,7 +77,6 @@
          "web" : "https://github.com/karupanerura/DateTimeX-Moment"
       }
    },
-   "version" : "0.02",
-   "x_authority" : "cpan:KARUPA",
-   "x_serialization_backend" : "JSON::PP version 2.27300"
+   "version" : "0.03",
+   "x_authority" : "cpan:KARUPA"
 }
