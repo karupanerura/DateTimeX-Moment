@@ -6,6 +6,10 @@ use Test::More;
 
 use DateTimeX::Moment;
 
+unless (eval { require DateTime::Duration; 1 }) {
+    plan skip_all => 'DateTime::Duration is required to test it';
+}
+
 binmode $_, ':encoding(UTF-8)' for Test::Builder->new()->output(),
     Test::Builder->new()->failure_output(),
     Test::Builder->new()->todo_output();

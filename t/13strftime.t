@@ -279,6 +279,10 @@ sub test_strftime_for_locale {
         locale     => $locale,
     );
 
+    unless (eval { require DateTime; 1 }) {
+        delete @{$tests}{qw/%c %x %X/};
+    }
+
     subtest(
         $locale,
         sub {

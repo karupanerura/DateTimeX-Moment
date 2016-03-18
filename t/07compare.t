@@ -107,7 +107,7 @@ $date2 = DateTimeX::Moment->new(
 ok( $date1->compare($date2) == 1, 'Comparison $a > $b, 1 year diff' );
 
 # comparison with floating time
-{
+if (eval { require DateTime::Duration; 1 }) {
     my $date1 = DateTimeX::Moment->new(
         year      => 1997, month  => 10, day    => 24,
         hour      => 12,   minute => 0,  second => 0,

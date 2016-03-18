@@ -15,8 +15,10 @@ use DateTimeX::Moment::Duration;
     $p = $dt->set( year => 1882 );
     is( DateTimeX::Moment->compare( $p, $dt ), 0, "set() returns self" );
 
-    $p = $dt->set_time_zone('Australia/Sydney');
-    is( DateTimeX::Moment->compare( $p, $dt ), 0, "set_time_zone() returns self" );
+    if (eval { require DateTime::Duration; 1 }) {
+        $p = $dt->set_time_zone('Australia/Sydney');
+        is( DateTimeX::Moment->compare( $p, $dt ), 0, "set_time_zone() returns self" );
+    }
 
     $p = $dt->add_duration($du);
     is( DateTimeX::Moment->compare( $p, $dt ), 0, "add_duration() returns self" );

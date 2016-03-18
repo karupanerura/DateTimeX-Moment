@@ -233,7 +233,7 @@ my %vals = (
     }
 }
 
-{
+if (eval { require DateTime::Duration; 1 }) {
     my $dt = DateTimeX::Moment->new(
         year      => 2010,
         month     => 3,

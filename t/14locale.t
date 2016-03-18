@@ -48,7 +48,7 @@ SKIP: {
     is( DateTimeX::Moment->now->locale->id, 'it', 'default locale should now be "it"' );
 }
 
-{
+if (eval { require DateTime::Duration; 1 }) {
     my $dt = DateTimeX::Moment->new(
         year      => 2013, month => 10, day => 27, hour => 0,
         time_zone => 'UTC'

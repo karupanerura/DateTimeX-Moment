@@ -9,7 +9,7 @@ unless ( eval { require Storable; 1 } ) {
     plan skip_all => 'Cannot load Storable';
 }
 
-{
+if (eval { require DateTime::Duration; 1 }) {
     my @dt = (
         DateTimeX::Moment->new(
             year       => 1950,

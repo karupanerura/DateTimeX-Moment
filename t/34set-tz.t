@@ -6,6 +6,10 @@ use Test::More 0.88;
 
 use DateTimeX::Moment;
 
+unless (eval { require DateTime::Duration; 1 }) {
+    plan skip_all => 'DateTime::Duration is required to test it';
+}
+
 # These tests are for a bug related to a bad interaction between the
 # horrid ->_handle_offset_modifier method and calling ->set_time_zone
 # on a real Olson time zone.  When _handle_offset_modifier was called

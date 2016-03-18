@@ -5,6 +5,10 @@ use Test::More;
 
 use DateTimeX::Moment;
 
+unless (eval { require DateTime::Duration; 1 }) {
+    plan skip_all => 'DateTime::Duration is required to test it';
+}
+
 my $badlt_rx = qr/Invalid local time|local time [0-9\-:T]+ does not exist/;
 
 {

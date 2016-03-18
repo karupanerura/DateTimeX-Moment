@@ -5,6 +5,10 @@ use Test::More;
 
 use DateTimeX::Moment;
 
+unless (eval { require DateTime::Duration; 1 }) {
+    plan skip_all => 'DateTime::Duration is required for testing';
+}
+
 #
 # This test exercises a bug that occurred when date math did not
 # always make sure to update the utc_year attribute of the given

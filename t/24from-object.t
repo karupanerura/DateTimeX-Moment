@@ -30,7 +30,7 @@ is( $dt1->nanosecond, 100,  'nanosecond is 100' );
     ok( $t2->time_zone->is_floating, 'time_zone is floating' );
 }
 
-{
+if (eval { require DateTime::Duration; 1 }) {
     my $tz = DateTime::TimeZone->new( name => 'America/Chicago' );
     my $t1 = DateTime::Calendar::_Test::WithTZ->new(
         rd_days   => 2, rd_secs => 0,
@@ -71,6 +71,12 @@ sub utc_rd_values {
     return $_[0]{rd_days}, $_[0]{rd_secs}, 0;
 }
 
+sub __as_Time_Moment {
+    my $self = shift;
+    require Time::Moment;
+    return Time::Moment->from_rd($self->{rd_days})->plus_seconds($self->{rd_secs});
+}
+
 package DateTime::Calendar::_Test::WithTZ;
 
 sub new {
@@ -84,4 +90,10 @@ sub utc_rd_values {
 
 sub time_zone {
     return $_[0]{time_zone};
+}
+
+sub __as_Time_Moment {
+    my $self = shift;
+    require Time::Moment;
+    return Time::Moment->from_rd($self->{rd_days})->plus_seconds($self->{rd_secs});
 }
