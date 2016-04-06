@@ -644,20 +644,45 @@ sub _calc_date {
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
     my $moment = $self->{_moment};
-    for my $unit (qw/nanoseconds seconds minutes hours weeks days months years/) {
-        next unless exists $args{$unit};
 
-        my $method = $type.'_'.$unit;
-        $moment = $moment->$method(delete $args{$unit});
+    {
+        if (exists $args{years} && exists $args{months}) {
+            my $factor = ($type eq 'plus') ? 12 : -12;
+            $args{months} += delete($args{years}) * $factor;
+        }
+
+        my $result = $moment;
+        for my $unit (qw/weeks days months years/) {
+            next unless exists $args{$unit};
+            my $method = $type.'_'.$unit;
+            $result = $result->$method(delete $args{$unit});
+        }
+
+        if (!$moment->is_equal($result)) {
+            $moment = _moment_resolve_local($result, $self->{time_zone});
+        }
     }
+
+    {
+        my $result = $moment;
+        for my $unit (qw/nanoseconds seconds minutes hours/) {
+            next unless exists $args{$unit};
+            my $method = $type.'_'.$unit;
+            $result = $result->$method(delete $args{$unit});
+        }
+
+        if (!$moment->is_equal($result)) {
+            $moment = _moment_resolve_instant($result, $self->{time_zone});
+        }
+    }
+
     if (%args) {
         my $msg = 'Invalid args: '.join ',', keys %args;
         Carp::croak $msg;
     }
 
     $self->{_moment} = $moment;
-
-    return $self->_adjust_to_current_offset();
+    return $self;
 }
 
 sub delta_md {
