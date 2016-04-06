@@ -308,7 +308,7 @@ sub day_of_year { shift->{_moment}->day_of_year }
 sub day_of_year_0 { shift->{_moment}->day_of_year - 1 }
 sub quarter { shift->{_moment}->quarter }
 sub quarter_0 { shift->{_moment}->quarter - 1 }
-sub weekday_of_month { floor((shift->{_moment}->day_of_month - 1) / 7) + 1 }
+sub weekday_of_month { int((shift->{_moment}->day_of_month - 1) / 7) + 1 }
 sub hour { shift->{_moment}->hour }
 sub hour_1 { shift->{_moment}->hour || 24 }
 sub hour_12 { shift->hour_12_0 || 12 }
@@ -337,7 +337,7 @@ sub week_year { Carp::croak 'not yet implemented' }
 sub week_of_month {
     my $self = shift;
     my $thu  = $self->day + 4 - $self->day_of_week;
-    return floor(($thu + 6) / 7);
+    return int(($thu + 6) / 7);
 }
 
 sub offset { $_[0]->{time_zone}->offset_for_datetime($_[0]) }
