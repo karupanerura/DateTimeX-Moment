@@ -322,8 +322,8 @@ sub fractional_second {
 }
 
 sub nanosecond { shift->{_moment}->nanosecond }
-sub millisecond { floor(shift->{_moment}->nanosecond / 1_000_000) }
-sub microsecond { floor(shift->{_moment}->nanosecond / 1_000)     }
+sub millisecond { shift->{_moment}->millisecond }
+sub microsecond { shift->{_moment}->microsecond }
 
 sub is_leap_year { _is_leap_year(shift->{_moment}->year) }
 sub leap_seconds { 0 } ## XXX: time moment doesn't have a leap seconds. So always leap seconds are zero.
