@@ -71,6 +71,28 @@ sub isa {
     return $invocant->SUPER::isa($a);
 }
 
+sub _moment_resolve_instant {
+    my ($moment, $time_zone) = @_;
+    if ($time_zone->is_floating) {
+        return $moment->with_offset_same_local(0);
+    }
+    else {
+        my $offset = $time_zone->offset_for_datetime($moment) / 60;
+        return $moment->with_offset_same_instant($offset);
+    }
+}
+
+sub _moment_resolve_local {
+    my ($moment, $time_zone) = @_;
+    if ($time_zone->is_floating) {
+        return $moment->with_offset_same_local(0);
+    }
+    else {
+        my $offset = $time_zone->offset_for_local_datetime($moment) / 60;
+        return $moment->with_offset_same_local($offset);
+    }
+}
+
 sub new {
     my $class = shift;
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
@@ -744,18 +766,15 @@ sub set_time_zone {
     return $self if $time_zone == $self->{time_zone};
     return $self if $time_zone->name eq $self->{time_zone}->name;
 
-    my $was_floating = $self->{time_zone}->is_floating;
+    $self->{_moment} = do {
+        if ($self->{time_zone}->is_floating) {
+            _moment_resolve_local($self->{_moment}, $time_zone)
+        }
+        else {
+            _moment_resolve_instant($self->{_moment}, $time_zone);
+        }
+    };
     $self->{time_zone} = $time_zone;
-
-    return $self->_adjust_to_current_offset() if $was_floating;
-
-    if ($time_zone->is_floating) {
-        $self->{_moment} = $self->{_moment}->with_offset_same_local(0);
-        return $self;
-    }
-
-    my $offset = $time_zone->offset_for_datetime($self->{_moment}) / 60;
-    $self->{_moment} = $self->{_moment}->with_offset_same_instant($offset);
     return $self;
 }
 
