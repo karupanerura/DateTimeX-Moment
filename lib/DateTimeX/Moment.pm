@@ -128,17 +128,8 @@ sub now {
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
 
-    my $moment = Time::Moment->now;
-    if ($time_zone->is_floating) {
-        $moment = $moment->with_offset_same_local(0);
-    }
-    else {
-        my $offset = $time_zone->offset_for_datetime($moment) / 60;
-        $moment = $moment->with_offset_same_instant($offset);
-    }
-
     return bless {
-        _moment   => $moment,
+        _moment   => _moment_resolve_instant(Time::Moment->now, $time_zone),
         locale    => $class->_inflate_locale($locale),
         formatter => $class->_inflate_formatter($formatter),
         time_zone => $time_zone,
@@ -183,16 +174,8 @@ sub from_object {
         $moment = Time::Moment->from_object($object);
     }
 
-    if ($time_zone->is_floating) {
-        $moment = $moment->with_offset_same_local(0);
-    }
-    else {
-        my $offset = $time_zone->offset_for_datetime($moment) / 60;
-        $moment = $moment->with_offset_same_instant($offset);
-    }
-
     return bless {
-        _moment   => $moment,
+        _moment   => _moment_resolve_instant($moment, $time_zone),
         locale    => $class->_inflate_locale($locale),
         formatter => $class->_inflate_formatter($formatter),
         time_zone => $time_zone,
@@ -221,13 +204,9 @@ sub from_epoch {
         local $SIG{__WARN__} = sub { die @_ };
         Time::Moment->from_epoch($epoch);
     };
-    if (!$time_zone->is_floating) {
-        my $offset = $time_zone->offset_for_datetime($moment) / 60;
-        $moment = $moment->with_offset_same_instant($offset);
-    }
 
     return bless {
-        _moment   => $moment,
+        _moment   => _moment_resolve_instant($moment, $time_zone),
         locale    => $class->_inflate_locale($locale),
         formatter => $class->_inflate_formatter($formatter),
         time_zone => $time_zone,
