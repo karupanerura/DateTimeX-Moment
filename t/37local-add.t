@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More skip_all => 'incompatible';
+use Test::More;
 
 use DateTimeX::Moment;
 
