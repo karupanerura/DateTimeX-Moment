@@ -46,8 +46,7 @@ unless (eval { require DateTime::Duration; 1 }) {
     );
 }
 
-SKIP: {
-    skip 'unsupoorted', 2;
+{
     my $dt = DateTimeX::Moment->new(
         year      => 2013,
         month     => 3,

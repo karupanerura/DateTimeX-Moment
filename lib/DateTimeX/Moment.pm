@@ -71,6 +71,28 @@ sub isa {
     return $invocant->SUPER::isa($a);
 }
 
+sub _moment_resolve_instant {
+    my ($moment, $time_zone) = @_;
+    if ($time_zone->is_floating) {
+        return $moment->with_offset_same_local(0);
+    }
+    else {
+        my $offset = $time_zone->offset_for_datetime($moment) / 60;
+        return $moment->with_offset_same_instant($offset);
+    }
+}
+
+sub _moment_resolve_local {
+    my ($moment, $time_zone) = @_;
+    if ($time_zone->is_floating) {
+        return $moment->with_offset_same_local(0);
+    }
+    else {
+        my $offset = $time_zone->offset_for_local_datetime($moment) / 60;
+        return $moment->with_offset_same_local($offset);
+    }
+}
+
 sub new {
     my $class = shift;
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
@@ -106,17 +128,8 @@ sub now {
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
 
-    my $moment = Time::Moment->now;
-    if ($time_zone->is_floating) {
-        $moment = $moment->with_offset_same_local(0);
-    }
-    else {
-        my $offset = $time_zone->offset_for_datetime($moment) / 60;
-        $moment = $moment->with_offset_same_instant($offset);
-    }
-
     return bless {
-        _moment   => $moment,
+        _moment   => _moment_resolve_instant(Time::Moment->now, $time_zone),
         locale    => $class->_inflate_locale($locale),
         formatter => $class->_inflate_formatter($formatter),
         time_zone => $time_zone,
@@ -161,16 +174,8 @@ sub from_object {
         $moment = Time::Moment->from_object($object);
     }
 
-    if ($time_zone->is_floating) {
-        $moment = $moment->with_offset_same_local(0);
-    }
-    else {
-        my $offset = $time_zone->offset_for_datetime($moment) / 60;
-        $moment = $moment->with_offset_same_instant($offset);
-    }
-
     return bless {
-        _moment   => $moment,
+        _moment   => _moment_resolve_instant($moment, $time_zone),
         locale    => $class->_inflate_locale($locale),
         formatter => $class->_inflate_formatter($formatter),
         time_zone => $time_zone,
@@ -199,13 +204,9 @@ sub from_epoch {
         local $SIG{__WARN__} = sub { die @_ };
         Time::Moment->from_epoch($epoch);
     };
-    if (!$time_zone->is_floating) {
-        my $offset = $time_zone->offset_for_datetime($moment) / 60;
-        $moment = $moment->with_offset_same_instant($offset);
-    }
 
     return bless {
-        _moment   => $moment,
+        _moment   => _moment_resolve_instant($moment, $time_zone),
         locale    => $class->_inflate_locale($locale),
         formatter => $class->_inflate_formatter($formatter),
         time_zone => $time_zone,
@@ -286,7 +287,7 @@ sub day_of_year { shift->{_moment}->day_of_year }
 sub day_of_year_0 { shift->{_moment}->day_of_year - 1 }
 sub quarter { shift->{_moment}->quarter }
 sub quarter_0 { shift->{_moment}->quarter - 1 }
-sub weekday_of_month { floor((shift->{_moment}->day_of_month - 1) / 7) + 1 }
+sub weekday_of_month { int((shift->{_moment}->day_of_month - 1) / 7) + 1 }
 sub hour { shift->{_moment}->hour }
 sub hour_1 { shift->{_moment}->hour || 24 }
 sub hour_12 { shift->hour_12_0 || 12 }
@@ -300,8 +301,8 @@ sub fractional_second {
 }
 
 sub nanosecond { shift->{_moment}->nanosecond }
-sub millisecond { floor(shift->{_moment}->nanosecond / 1_000_000) }
-sub microsecond { floor(shift->{_moment}->nanosecond / 1_000)     }
+sub millisecond { shift->{_moment}->millisecond }
+sub microsecond { shift->{_moment}->microsecond }
 
 sub is_leap_year { _is_leap_year(shift->{_moment}->year) }
 sub leap_seconds { 0 } ## XXX: time moment doesn't have a leap seconds. So always leap seconds are zero.
@@ -315,7 +316,7 @@ sub week_year { Carp::croak 'not yet implemented' }
 sub week_of_month {
     my $self = shift;
     my $thu  = $self->day + 4 - $self->day_of_week;
-    return floor(($thu + 6) / 7);
+    return int(($thu + 6) / 7);
 }
 
 sub offset { $_[0]->{time_zone}->offset_for_datetime($_[0]) }
@@ -622,20 +623,45 @@ sub _calc_date {
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
     my $moment = $self->{_moment};
-    for my $unit (qw/nanoseconds seconds minutes hours weeks days months years/) {
-        next unless exists $args{$unit};
 
-        my $method = $type.'_'.$unit;
-        $moment = $moment->$method(delete $args{$unit});
+    {
+        if (exists $args{years} && exists $args{months}) {
+            my $factor = ($type eq 'plus') ? 12 : -12;
+            $args{months} += delete($args{years}) * $factor;
+        }
+
+        my $result = $moment;
+        for my $unit (qw/weeks days months years/) {
+            next unless exists $args{$unit};
+            my $method = $type.'_'.$unit;
+            $result = $result->$method(delete $args{$unit});
+        }
+
+        if (!$moment->is_equal($result)) {
+            $moment = _moment_resolve_local($result, $self->{time_zone});
+        }
     }
+
+    {
+        my $result = $moment;
+        for my $unit (qw/nanoseconds seconds minutes hours/) {
+            next unless exists $args{$unit};
+            my $method = $type.'_'.$unit;
+            $result = $result->$method(delete $args{$unit});
+        }
+
+        if (!$moment->is_equal($result)) {
+            $moment = _moment_resolve_instant($result, $self->{time_zone});
+        }
+    }
+
     if (%args) {
         my $msg = 'Invalid args: '.join ',', keys %args;
         Carp::croak $msg;
     }
 
     $self->{_moment} = $moment;
-
-    return $self->_adjust_to_current_offset();
+    return $self;
 }
 
 sub delta_md {
@@ -744,18 +770,15 @@ sub set_time_zone {
     return $self if $time_zone == $self->{time_zone};
     return $self if $time_zone->name eq $self->{time_zone}->name;
 
-    my $was_floating = $self->{time_zone}->is_floating;
+    $self->{_moment} = do {
+        if ($self->{time_zone}->is_floating) {
+            _moment_resolve_local($self->{_moment}, $time_zone)
+        }
+        else {
+            _moment_resolve_instant($self->{_moment}, $time_zone);
+        }
+    };
     $self->{time_zone} = $time_zone;
-
-    return $self->_adjust_to_current_offset() if $was_floating;
-
-    if ($time_zone->is_floating) {
-        $self->{_moment} = $self->{_moment}->with_offset_same_local(0);
-        return $self;
-    }
-
-    my $offset = $time_zone->offset_for_datetime($self->{_moment}) / 60;
-    $self->{_moment} = $self->{_moment}->with_offset_same_instant($offset);
     return $self;
 }
 
