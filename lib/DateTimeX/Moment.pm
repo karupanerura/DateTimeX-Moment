@@ -409,12 +409,6 @@ sub _mod_and_keep_sign {
     return $sign * ($lhs % $rhs);
 }
 
-sub _delta_days {
-    my ($lhs, $rhs) = @_;
-    return $lhs->day_of_month - $rhs->day_of_month if $lhs->day_of_month >= $rhs->day_of_month;
-    return $lhs->day_of_month + (_month_length($rhs->year, $rhs->month) - $rhs->day_of_month);
-}
-
 sub subtract_datetime {
     my ($lhs, $rhs) = @_;
     my $class = ref $lhs;
@@ -429,10 +423,32 @@ sub subtract_datetime {
     ($lhs_moment, $rhs_moment) = ($rhs_moment, $lhs_moment) if $sign == -1;
 
     my $months      = $rhs_moment->delta_months($lhs_moment);
-    my $days        = _delta_days($lhs_moment, $rhs_moment);
-    my $minutes     = 60 * ($lhs_moment->hour - $rhs_moment->hour) + ($lhs_moment->minute - $rhs_moment->minute);
+    my $days        = $lhs_moment->day_of_month - $rhs_moment->day_of_month;
+    my $minutes     = $lhs_moment->minute_of_day - $rhs_moment->minute_of_day;
     my $seconds     = $lhs_moment->second - $rhs_moment->second;
     my $nanoseconds = $lhs_moment->nanosecond - $rhs_moment->nanosecond;
+
+    my $time_zone = $lhs->{time_zone};
+    if ($time_zone->has_dst_changes) {
+        my $lhs_dst = $time_zone->is_dst_for_datetime($lhs_moment);
+        my $rhs_dst = $time_zone->is_dst_for_datetime($rhs_moment);
+
+        if ($lhs_dst != $rhs_dst) {
+            my $previous = eval {
+                _moment_resolve_local($lhs_moment->minus_days(1), $time_zone);
+            };
+
+            if (defined $previous) {
+                my $previous_dst = $time_zone->is_dst_for_datetime($previous);
+                if ($lhs_dst) {
+                    $minutes -= 60 if !$previous_dst;
+                }
+                else {
+                    $minutes += 60 if $previous_dst;
+                }
+            }
+        }
+    }
 
     if ($nanoseconds < 0) {
         $nanoseconds += 1_000_000_000;
@@ -447,9 +463,8 @@ sub subtract_datetime {
         $days--;
     }
     if ($days < 0) {
-        my $max_days = _month_length($rhs->year, $rhs_moment->month);
-        $days += $max_days;
-        $months--;
+        $days   += $rhs_moment->length_of_month;
+        $months -= $lhs_moment->day_of_month > $rhs_moment->day_of_month;
     }
 
     return DateTimeX::Moment::Duration->new(
