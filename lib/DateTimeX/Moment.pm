@@ -813,32 +813,46 @@ sub truncate :method {
         Carp::croak $msg;
     }
 
-    if ($to eq 'week' || $to eq 'local_week') {
-        my $first_day_of_week = $to eq 'local_week' ? $self->{locale}->first_day_of_week : 1;
-        my $day_diff = ($self->{_moment}->day_of_week - $first_day_of_week) % 7;
-        $self->subtract(days => $day_diff) if $day_diff;
-        eval {
-            $self->truncate(to => 'day');
-        };
-        if ($@) {
-            $self->add(days => $day_diff); # rollback
-            die $@;
+    my $moment = $self->{_moment};
+    my $result = do {
+        if ($to eq 'year') {
+            $moment->with_day_of_year(1)
+                   ->at_midnight;
         }
-        return $self;
+        elsif ($to eq 'month') {
+            $moment->with_day_of_month(1)
+                   ->at_midnight;
+        }
+        elsif ($to eq 'week')   {
+            $moment->with_day_of_week(1)
+                   ->at_midnight;
+        }
+        elsif ($to eq 'local_week') {
+            my $dow = $self->{locale}->first_day_of_week;
+            $moment->minus_days(($moment->day_of_week - $dow) % 7)
+                   ->at_midnight;
+        }
+        elsif ($to eq 'day') {
+            $moment->at_midnight;
+        }
+        elsif ($to eq 'hour') {
+            $moment->with_precision(-2);
+        }
+        elsif ($to eq 'minute') {
+            $moment->with_precision(-1);
+        }
+        elsif ($to eq 'second') {
+            $moment->with_precision(0);
+        }
+        else {
+            Carp::croak "The 'to' parameter '$to' is unsupported.";
+        }
+    };
+
+    if (!$moment->is_equal($result)) {
+        $self->{_moment} = _moment_resolve_local($result, $self->{time_zone});
     }
-
-    my %param;
-    $param{nanosecond} = 0; goto DO_TRUNCATE if $to eq 'second';
-    $param{second}     = 0; goto DO_TRUNCATE if $to eq 'minute';
-    $param{minute}     = 0; goto DO_TRUNCATE if $to eq 'hour';
-    $param{hour}       = 0; goto DO_TRUNCATE if $to eq 'day';
-    $param{day}        = 1; goto DO_TRUNCATE if $to eq 'month';
-    $param{month}      = 1; goto DO_TRUNCATE if $to eq 'year';
-
-    Carp::croak "The 'to' parameter '$to' is unsupported.";
-
- DO_TRUNCATE:
-    return $self->set(%param);
+    return $self;
 }
 
 my %CALC_DURATION_METHOD = (plus => 'add_duration', minus => 'subtract_duration');
