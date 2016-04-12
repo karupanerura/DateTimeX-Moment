@@ -287,7 +287,7 @@ sub day_of_year { shift->{_moment}->day_of_year }
 sub day_of_year_0 { shift->{_moment}->day_of_year - 1 }
 sub quarter { shift->{_moment}->quarter }
 sub quarter_0 { shift->{_moment}->quarter - 1 }
-sub weekday_of_month { int((shift->{_moment}->day_of_month - 1) / 7) + 1 }
+sub weekday_of_month { int((shift->{_moment}->day_of_month + 6) / 7) }
 sub hour { shift->{_moment}->hour }
 sub hour_1 { shift->{_moment}->hour || 24 }
 sub hour_12 { shift->hour_12_0 || 12 }
