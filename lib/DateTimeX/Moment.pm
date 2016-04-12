@@ -587,21 +587,23 @@ sub set {
     my $self = shift;
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
-    my $src = $self->{_moment};
+    my $moment = $self->{_moment};
 
-    my %params;
+    my %params = (offset => $moment->offset);
     for my $unit (qw/year month day hour minute second nanosecond/) {
         my $key = $unit eq 'day' ? 'day_of_month' : $unit;
-        $params{$unit} = exists $args{$unit} ? delete $args{$unit} : $src->$key();
+        $params{$unit} = exists $args{$unit} ? delete $args{$unit} : $moment->$key();
     }
     if (%args) {
         my $msg = 'Invalid args: '.join ',', keys %args;
         Carp::croak $msg;
     }
 
-    $self->{_moment} = Time::Moment->new(%params);
-
-    return $self->_adjust_to_current_offset();
+    my $result = Time::Moment->new(%params);
+    if (!$moment->is_equal($result)) {
+        $self->{_moment} = _moment_resolve_local($result, $self->{time_zone});
+    }
+    return $self;
 }
 
 sub set_year       { $_[0]->set(year       => $_[1]) }
