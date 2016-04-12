@@ -308,7 +308,11 @@ sub is_leap_year { shift->{_moment}->is_leap_year + 0 }
 sub leap_seconds { 0 } ## XXX: time moment doesn't have a leap seconds. So always leap seconds are zero.
 
 sub week_number { shift->{_moment}->week }
-sub week_year { Carp::croak 'not yet implemented' }
+sub week_year { shift->{_moment}->strftime('%G') + 0 }
+
+sub week {
+    return ($_[0]->week_year, $_[0]->week_number);
+}
 
 # ISO says that the first week of a year is the first week containing
 # a Thursday. Extending that says that the first week of the month is
