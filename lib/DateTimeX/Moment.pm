@@ -318,8 +318,8 @@ sub week {
 # a Thursday. Extending that says that the first week of the month is
 # the first week containing a Thursday. ICU agrees.
 sub week_of_month {
-    my $self = shift;
-    my $thu  = $self->day + 4 - $self->day_of_week;
+    my $moment = shift->{_moment};
+    my $thu    = $moment->day_of_month + 4 - $moment->day_of_week;
     return int(($thu + 6) / 7);
 }
 
