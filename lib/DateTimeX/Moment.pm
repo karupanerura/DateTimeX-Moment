@@ -319,7 +319,7 @@ sub week_of_month {
     return int(($thu + 6) / 7);
 }
 
-sub offset { $_[0]->{time_zone}->offset_for_datetime($_[0]) }
+sub offset { shift->{_moment}->offset * 60 }
 
 sub _escape_pct {
     (my $string = $_[0]) =~ s/%/%%/g; $string;
