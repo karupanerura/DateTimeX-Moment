@@ -304,7 +304,7 @@ sub nanosecond { shift->{_moment}->nanosecond }
 sub millisecond { shift->{_moment}->millisecond }
 sub microsecond { shift->{_moment}->microsecond }
 
-sub is_leap_year { _is_leap_year(shift->{_moment}->year) }
+sub is_leap_year { shift->{_moment}->is_leap_year + 0 }
 sub leap_seconds { 0 } ## XXX: time moment doesn't have a leap seconds. So always leap seconds are zero.
 
 sub week_number { shift->{_moment}->week }
