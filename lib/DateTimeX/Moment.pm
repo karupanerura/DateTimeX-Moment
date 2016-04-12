@@ -321,43 +321,41 @@ sub week_of_month {
 
 sub offset { $_[0]->{time_zone}->offset_for_datetime($_[0]) }
 
+sub _escape_pct {
+    (my $string = $_[0]) =~ s/%/%%/g; $string;
+}
+
 sub ymd {
     my $moment = shift->{_moment};
-    my $separator = defined $_[0] ? shift : '-';
-    return sprintf '%04d%s%02d%s%02d',
-        $moment->year, $separator,
-        $moment->month, $separator,
-        $moment->day_of_month;
+    my $hyphen = !defined $_[0] || $_[0] eq '-';
+    my $format = $hyphen ? '%Y-%m-%d' : join(_escape_pct($_[0]), qw(%Y %m %d));
+    return $moment->strftime($format);
 }
 
 sub mdy {
     my $moment = shift->{_moment};
-    my $separator = defined $_[0] ? shift : '-';
-    return sprintf '%02d%s%02d%s%04d',
-        $moment->month, $separator,
-        $moment->day_of_month, $separator,
-        $moment->year;
+    my $hyphen = !defined $_[0] || $_[0] eq '-';
+    my $format = $hyphen ? '%m-%d-%Y' : join(_escape_pct($_[0]), qw(%m %d %Y));
+    return $moment->strftime($format);
 }
 
 sub dmy {
     my $moment = shift->{_moment};
-    my $separator = defined $_[0] ? shift : '-';
-    return sprintf '%02d%s%02d%s%04d',
-        $moment->day_of_month, $separator,
-        $moment->month, $separator,
-        $moment->year;
+    my $hyphen = !defined $_[0] || $_[0] eq '-';
+    my $format = $hyphen ? '%d-%m-%Y' : join(_escape_pct($_[0]), qw(%d %m %Y));
+    return $moment->strftime($format);
 }
 
 sub hms {
     my $moment = shift->{_moment};
-    my $separator = defined $_[0] ? shift : ':';
-    return sprintf '%02d%s%02d%s%02d',
-        $moment->hour, $separator,
-        $moment->minute, $separator,
-        $moment->second;
+    my $colon  = !defined $_[0] || $_[0] eq ':';
+    my $format = $colon ? '%H:%M:%S' : join(_escape_pct($_[0]), qw(%H %M %S));
+    return $moment->strftime($format);
 }
 
-sub iso8601 { $_[0]->ymd('-').'T'.$_[0]->hms(':') }
+sub iso8601 {
+    return $_[0]->{_moment}->strftime('%Y-%m-%dT%H:%M:%S');
+}
 
 # NOTE: no nanoseconds, no leap seconds
 sub utc_rd_values   { $_[0]->{_moment}->utc_rd_values }
