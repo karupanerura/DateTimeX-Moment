@@ -287,7 +287,7 @@ sub day_of_year { shift->{_moment}->day_of_year }
 sub day_of_year_0 { shift->{_moment}->day_of_year - 1 }
 sub quarter { shift->{_moment}->quarter }
 sub quarter_0 { shift->{_moment}->quarter - 1 }
-sub weekday_of_month { int((shift->{_moment}->day_of_month - 1) / 7) + 1 }
+sub weekday_of_month { int((shift->{_moment}->day_of_month + 6) / 7) }
 sub hour { shift->{_moment}->hour }
 sub hour_1 { shift->{_moment}->hour || 24 }
 sub hour_12 { shift->hour_12_0 || 12 }
@@ -304,60 +304,62 @@ sub nanosecond { shift->{_moment}->nanosecond }
 sub millisecond { shift->{_moment}->millisecond }
 sub microsecond { shift->{_moment}->microsecond }
 
-sub is_leap_year { _is_leap_year(shift->{_moment}->year) }
+sub is_leap_year { shift->{_moment}->is_leap_year + 0 }
 sub leap_seconds { 0 } ## XXX: time moment doesn't have a leap seconds. So always leap seconds are zero.
 
 sub week_number { shift->{_moment}->week }
-sub week_year { Carp::croak 'not yet implemented' }
+sub week_year { shift->{_moment}->strftime('%G') + 0 }
+
+sub week {
+    return ($_[0]->week_year, $_[0]->week_number);
+}
 
 # ISO says that the first week of a year is the first week containing
 # a Thursday. Extending that says that the first week of the month is
 # the first week containing a Thursday. ICU agrees.
 sub week_of_month {
-    my $self = shift;
-    my $thu  = $self->day + 4 - $self->day_of_week;
+    my $moment = shift->{_moment};
+    my $thu    = $moment->day_of_month + 4 - $moment->day_of_week;
     return int(($thu + 6) / 7);
 }
 
-sub offset { $_[0]->{time_zone}->offset_for_datetime($_[0]) }
+sub offset { shift->{_moment}->offset * 60 }
+
+sub _escape_pct {
+    (my $string = $_[0]) =~ s/%/%%/g; $string;
+}
 
 sub ymd {
     my $moment = shift->{_moment};
-    my $separator = defined $_[0] ? shift : '-';
-    return sprintf '%04d%s%02d%s%02d',
-        $moment->year, $separator,
-        $moment->month, $separator,
-        $moment->day_of_month;
+    my $hyphen = !defined $_[0] || $_[0] eq '-';
+    my $format = $hyphen ? '%Y-%m-%d' : join(_escape_pct($_[0]), qw(%Y %m %d));
+    return $moment->strftime($format);
 }
 
 sub mdy {
     my $moment = shift->{_moment};
-    my $separator = defined $_[0] ? shift : '-';
-    return sprintf '%02d%s%02d%s%04d',
-        $moment->month, $separator,
-        $moment->day_of_month, $separator,
-        $moment->year;
+    my $hyphen = !defined $_[0] || $_[0] eq '-';
+    my $format = $hyphen ? '%m-%d-%Y' : join(_escape_pct($_[0]), qw(%m %d %Y));
+    return $moment->strftime($format);
 }
 
 sub dmy {
     my $moment = shift->{_moment};
-    my $separator = defined $_[0] ? shift : '-';
-    return sprintf '%02d%s%02d%s%04d',
-        $moment->day_of_month, $separator,
-        $moment->month, $separator,
-        $moment->year;
+    my $hyphen = !defined $_[0] || $_[0] eq '-';
+    my $format = $hyphen ? '%d-%m-%Y' : join(_escape_pct($_[0]), qw(%d %m %Y));
+    return $moment->strftime($format);
 }
 
 sub hms {
     my $moment = shift->{_moment};
-    my $separator = defined $_[0] ? shift : ':';
-    return sprintf '%02d%s%02d%s%02d',
-        $moment->hour, $separator,
-        $moment->minute, $separator,
-        $moment->second;
+    my $colon  = !defined $_[0] || $_[0] eq ':';
+    my $format = $colon ? '%H:%M:%S' : join(_escape_pct($_[0]), qw(%H %M %S));
+    return $moment->strftime($format);
 }
 
-sub iso8601 { $_[0]->ymd('-').'T'.$_[0]->hms(':') }
+sub iso8601 {
+    return $_[0]->{_moment}->strftime('%Y-%m-%dT%H:%M:%S');
+}
 
 # NOTE: no nanoseconds, no leap seconds
 sub utc_rd_values   { $_[0]->{_moment}->utc_rd_values }
@@ -409,12 +411,6 @@ sub _mod_and_keep_sign {
     return $sign * ($lhs % $rhs);
 }
 
-sub _delta_days {
-    my ($lhs, $rhs) = @_;
-    return $lhs->day_of_month - $rhs->day_of_month if $lhs->day_of_month >= $rhs->day_of_month;
-    return $lhs->day_of_month + (_month_length($rhs->year, $rhs->month) - $rhs->day_of_month);
-}
-
 sub subtract_datetime {
     my ($lhs, $rhs) = @_;
     my $class = ref $lhs;
@@ -429,10 +425,32 @@ sub subtract_datetime {
     ($lhs_moment, $rhs_moment) = ($rhs_moment, $lhs_moment) if $sign == -1;
 
     my $months      = $rhs_moment->delta_months($lhs_moment);
-    my $days        = _delta_days($lhs_moment, $rhs_moment);
-    my $minutes     = 60 * ($lhs_moment->hour - $rhs_moment->hour) + ($lhs_moment->minute - $rhs_moment->minute);
+    my $days        = $lhs_moment->day_of_month - $rhs_moment->day_of_month;
+    my $minutes     = $lhs_moment->minute_of_day - $rhs_moment->minute_of_day;
     my $seconds     = $lhs_moment->second - $rhs_moment->second;
     my $nanoseconds = $lhs_moment->nanosecond - $rhs_moment->nanosecond;
+
+    my $time_zone = $lhs->{time_zone};
+    if ($time_zone->has_dst_changes) {
+        my $lhs_dst = $time_zone->is_dst_for_datetime($lhs_moment);
+        my $rhs_dst = $time_zone->is_dst_for_datetime($rhs_moment);
+
+        if ($lhs_dst != $rhs_dst) {
+            my $previous = eval {
+                _moment_resolve_local($lhs_moment->minus_days(1), $time_zone);
+            };
+
+            if (defined $previous) {
+                my $previous_dst = $time_zone->is_dst_for_datetime($previous);
+                if ($lhs_dst) {
+                    $minutes -= 60 if !$previous_dst;
+                }
+                else {
+                    $minutes += 60 if $previous_dst;
+                }
+            }
+        }
+    }
 
     if ($nanoseconds < 0) {
         $nanoseconds += 1_000_000_000;
@@ -447,9 +465,8 @@ sub subtract_datetime {
         $days--;
     }
     if ($days < 0) {
-        my $max_days = _month_length($rhs->year, $rhs_moment->month);
-        $days += $max_days;
-        $months--;
+        $days   += $rhs_moment->length_of_month;
+        $months -= $lhs_moment->day_of_month > $rhs_moment->day_of_month;
     }
 
     return DateTimeX::Moment::Duration->new(
@@ -587,21 +604,23 @@ sub set {
     my $self = shift;
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
-    my $src = $self->{_moment};
+    my $moment = $self->{_moment};
 
-    my %params;
+    my %params = (offset => $moment->offset);
     for my $unit (qw/year month day hour minute second nanosecond/) {
         my $key = $unit eq 'day' ? 'day_of_month' : $unit;
-        $params{$unit} = exists $args{$unit} ? delete $args{$unit} : $src->$key();
+        $params{$unit} = exists $args{$unit} ? delete $args{$unit} : $moment->$key();
     }
     if (%args) {
         my $msg = 'Invalid args: '.join ',', keys %args;
         Carp::croak $msg;
     }
 
-    $self->{_moment} = Time::Moment->new(%params);
-
-    return $self->_adjust_to_current_offset();
+    my $result = Time::Moment->new(%params);
+    if (!$moment->is_equal($result)) {
+        $self->{_moment} = _moment_resolve_local($result, $self->{time_zone});
+    }
+    return $self;
 }
 
 sub set_year       { $_[0]->set(year       => $_[1]) }
@@ -798,32 +817,46 @@ sub truncate :method {
         Carp::croak $msg;
     }
 
-    if ($to eq 'week' || $to eq 'local_week') {
-        my $first_day_of_week = $to eq 'local_week' ? $self->{locale}->first_day_of_week : 1;
-        my $day_diff = ($self->{_moment}->day_of_week - $first_day_of_week) % 7;
-        $self->subtract(days => $day_diff) if $day_diff;
-        eval {
-            $self->truncate(to => 'day');
-        };
-        if ($@) {
-            $self->add(days => $day_diff); # rollback
-            die $@;
+    my $moment = $self->{_moment};
+    my $result = do {
+        if ($to eq 'year') {
+            $moment->with_day_of_year(1)
+                   ->at_midnight;
         }
-        return $self;
+        elsif ($to eq 'month') {
+            $moment->with_day_of_month(1)
+                   ->at_midnight;
+        }
+        elsif ($to eq 'week')   {
+            $moment->with_day_of_week(1)
+                   ->at_midnight;
+        }
+        elsif ($to eq 'local_week') {
+            my $dow = $self->{locale}->first_day_of_week;
+            $moment->minus_days(($moment->day_of_week - $dow) % 7)
+                   ->at_midnight;
+        }
+        elsif ($to eq 'day') {
+            $moment->at_midnight;
+        }
+        elsif ($to eq 'hour') {
+            $moment->with_precision(-2);
+        }
+        elsif ($to eq 'minute') {
+            $moment->with_precision(-1);
+        }
+        elsif ($to eq 'second') {
+            $moment->with_precision(0);
+        }
+        else {
+            Carp::croak "The 'to' parameter '$to' is unsupported.";
+        }
+    };
+
+    if (!$moment->is_equal($result)) {
+        $self->{_moment} = _moment_resolve_local($result, $self->{time_zone});
     }
-
-    my %param;
-    $param{nanosecond} = 0; goto DO_TRUNCATE if $to eq 'second';
-    $param{second}     = 0; goto DO_TRUNCATE if $to eq 'minute';
-    $param{minute}     = 0; goto DO_TRUNCATE if $to eq 'hour';
-    $param{hour}       = 0; goto DO_TRUNCATE if $to eq 'day';
-    $param{day}        = 1; goto DO_TRUNCATE if $to eq 'month';
-    $param{month}      = 1; goto DO_TRUNCATE if $to eq 'year';
-
-    Carp::croak "The 'to' parameter '$to' is unsupported.";
-
- DO_TRUNCATE:
-    return $self->set(%param);
+    return $self;
 }
 
 my %CALC_DURATION_METHOD = (plus => 'add_duration', minus => 'subtract_duration');
