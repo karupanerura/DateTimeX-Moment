@@ -77,7 +77,7 @@
          "web" : "https://github.com/karupanerura/DateTimeX-Moment"
       }
    },
-   "version" : "0.04",
+   "version" : "0.05",
    "x_authority" : "cpan:KARUPA",
    "x_contributors" : [
       "chansen <chansen@cpan.org>"
