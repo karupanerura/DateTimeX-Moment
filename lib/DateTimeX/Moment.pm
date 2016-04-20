@@ -715,6 +715,18 @@ sub delta_md {
     );
 }
 
+sub delta_days {
+    my ($lhs, $rhs) = @_;
+    my $class = ref $lhs;
+
+    $rhs = $class->from_object(object => $rhs)
+      unless $rhs->isa($class);
+
+    return DateTimeX::Moment::Duration->new(
+        days => abs($lhs->{_moment}->delta_days($rhs->{_moment}))
+    );
+}
+
 sub delta_ms {
     my ($lhs, $rhs) = reverse sort { $a <=> $b } @_;
     my $days = floor($lhs->{_moment}->jd - $rhs->{_moment}->jd);
@@ -729,7 +741,7 @@ sub delta_ms {
 sub delta_years        { shift->_delta(years        => @_) }
 sub delta_months       { shift->_delta(months       => @_) }
 sub delta_weeks        { shift->_delta(weeks        => @_) }
-sub delta_days         { shift->_delta(days         => @_) }
+#sub delta_days         { shift->_delta(days         => @_) }
 sub delta_hours        { shift->_delta(hours        => @_) }
 sub delta_minutes      { shift->_delta(minutes      => @_) }
 sub delta_seconds      { shift->_delta(seconds      => @_) }
