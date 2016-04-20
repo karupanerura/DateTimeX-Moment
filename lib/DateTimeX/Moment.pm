@@ -689,8 +689,30 @@ sub _calc_date {
 }
 
 sub delta_md {
-    my ($lhs, $rhs) = reverse sort { $a <=> $b } @_;
-    return $lhs->clone->truncate(to => 'day')->subtract_datetime($rhs->clone->truncate(to => 'day'));
+    my ($lhs, $rhs) = @_;
+    my $class = ref $lhs;
+
+    $rhs = $class->from_object(object => $rhs)
+      unless $rhs->isa($class);
+
+    my ($lhs_moment, $rhs_moment) = ($lhs->{_moment}, $rhs->{_moment});
+
+    if ($lhs_moment->rd < $rhs_moment->rd) {
+        ($lhs_moment, $rhs_moment) = ($rhs_moment, $lhs_moment);
+    }
+
+    my $months = $rhs_moment->delta_months($lhs_moment);
+    my $days   = $lhs_moment->day_of_month - $rhs_moment->day_of_month;
+
+    if ($days < 0) {
+        $days   += $rhs_moment->length_of_month;
+        $months -= $lhs_moment->day_of_month > $rhs_moment->day_of_month;
+    }
+
+    return DateTimeX::Moment::Duration->new(
+        months => $months,
+        days   => $days,
+    );
 }
 
 sub delta_ms {
