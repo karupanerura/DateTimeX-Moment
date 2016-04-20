@@ -405,12 +405,6 @@ sub hires_epoch {
 sub is_finite   { 1 }
 sub is_infinite { 0 }
 
-sub _mod_and_keep_sign {
-    my ($lhs, $rhs) = @_;
-    my $sign = $lhs < 0 ? -1 : 1;
-    return $sign * ($lhs % $rhs);
-}
-
 sub subtract_datetime {
     my ($lhs, $rhs) = @_;
     my $class = ref $lhs;
