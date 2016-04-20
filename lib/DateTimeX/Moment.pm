@@ -605,18 +605,25 @@ sub set {
     my %args = (@_ == 1 && ref $_[0] eq 'HASH') ? %{$_[0]} : @_;
 
     my $moment = $self->{_moment};
-
-    my %params = (offset => $moment->offset);
-    for my $unit (qw/year month day hour minute second nanosecond/) {
-        my $key = $unit eq 'day' ? 'day_of_month' : $unit;
-        $params{$unit} = exists $args{$unit} ? delete $args{$unit} : $moment->$key();
+    my %params = (
+        year       => $moment->year,
+        month      => $moment->month,
+        day        => $moment->day_of_month,
+        hour       => $moment->hour,
+        minute     => $moment->minute,
+        second     => $moment->second,
+        nanosecond => $moment->nanosecond,
+    );
+    for my $component (keys %args) {
+        next unless exists $params{$component};
+        $params{$component} = delete $args{$component};
     }
     if (%args) {
         my $msg = 'Invalid args: '.join ',', keys %args;
         Carp::croak $msg;
     }
 
-    my $result = Time::Moment->new(%params);
+    my $result = Time::Moment->new(%params, offset => $moment->offset);
     if (!$moment->is_equal($result)) {
         $self->{_moment} = _moment_resolve_local($result, $self->{time_zone});
     }
