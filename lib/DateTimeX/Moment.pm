@@ -482,20 +482,18 @@ sub subtract_datetime_absolute {
     my ($lhs, $rhs) = @_;
     my $class = ref $lhs;
 
-    # normalize
-    $rhs = $class->from_object(object => $rhs) unless $rhs->isa($class);
-    $rhs = $rhs->clone->set_time_zone($lhs->time_zone) unless $lhs->time_zone eq $rhs->time_zone;
+    $rhs = $class->from_object(object => $rhs)
+      unless $rhs->isa($class);
 
-    my ($lhs_moment, $rhs_moment) = map { $_->{_moment} } ($lhs, $rhs);
-    my $sign = $lhs_moment < $rhs_moment ? -1 : 1;
-    ($lhs_moment, $rhs_moment) = ($rhs_moment, $lhs_moment) if $sign == -1;
+    my ($lhs_moment, $rhs_moment) = ($lhs->{_moment}, $rhs->{_moment});
 
     my $seconds     = $rhs_moment->delta_seconds($lhs_moment);
-    my $nanoseconds = $rhs_moment->delta_nanoseconds($lhs_moment) % 1_000_000_000;
+    my $nanoseconds = $rhs_moment->plus_seconds($seconds)
+                                 ->delta_nanoseconds($lhs_moment);
 
     return DateTimeX::Moment::Duration->new(
-        seconds     => $sign * $seconds,
-        nanoseconds => $sign * $nanoseconds,
+        seconds     => $seconds,
+        nanoseconds => $nanoseconds,
     );
 }
 
