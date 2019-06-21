@@ -4,13 +4,13 @@
       "karupanerura <karupa@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.1, CPAN::Meta::Converter version 2.150005",
+   "generated_by" : "Minilla/v3.1.4, CPAN::Meta::Converter version 2.150010",
    "license" : [
-      "artistic_2"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : "2"
+      "version" : 2
    },
    "name" : "DateTimeX-Moment",
    "no_index" : {
@@ -49,6 +49,7 @@
          "requires" : {
             "Class::Accessor::Lite" : "0",
             "Class::Inspector" : "0",
+            "DateTime::Duration" : "0",
             "DateTime::Locale" : "0",
             "DateTime::TimeZone" : "0",
             "List::Util" : "0",
@@ -82,5 +83,6 @@
    "x_contributors" : [
       "chansen <chansen@cpan.org>"
    ],
-   "x_serialization_backend" : "JSON::PP version 2.27300"
+   "x_serialization_backend" : "JSON::PP version 4.02",
+   "x_static_install" : 1
 }
