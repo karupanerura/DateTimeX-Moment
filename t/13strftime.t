@@ -301,9 +301,14 @@ sub en_tests {
     my $en_locale = DateTime::Locale->load('en-US');
 
     my $c_format = $en_locale->datetime_format;
+
+    # CLDR changed the separator between time and AM/PM in en since version 42
+    # https://unicode-org.atlassian.net/issues/CLDR-14032
+    my $p_separator = $DateTime::Locale::Data::CLDRVersion >= 42 ? "\x{202f}" : ' ';
+
     $c_format
         =~ s/\{1\}/$en_locale->month_format_abbreviated->[8] . ' 7, 1999'/e;
-    $c_format =~ s/\{0\}/'1:02:42 ' . $en_locale->am_pm_abbreviated->[1]/e;
+    $c_format =~ s/\{0\}/'1:02:42' . $p_separator . $en_locale->am_pm_abbreviated->[1]/e;
 
     return {
         '%y'        => '99',
@@ -347,7 +352,7 @@ sub en_tests {
         '%{month}'  => '9',
         '%{year}'   => '1999',
         '%x'        => $en_locale->month_format_abbreviated->[8] . ' 7, 1999',
-        '%X'        => '1:02:42 ' . $en_locale->am_pm_abbreviated->[1],
+        '%X'        => '1:02:42' . $p_separator . $en_locale->am_pm_abbreviated->[1],
         '%c'        => $c_format,
     };
 }
