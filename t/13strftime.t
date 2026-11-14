@@ -287,9 +287,20 @@ sub test_strftime_for_locale {
         $locale,
         sub {
             for my $fmt ( sort keys %{$tests} ) {
+                my $got  = $dt->strftime($fmt);
+                my $want = $tests->{$fmt};
+
+                # DateTime-Locale 1.37 changed the space before the
+                # AM/PM marker in English time formats to a narrow
+                # no-break space (U+202F). Normalise U+202F and U+00A0
+                # to a plain space on both sides so the test passes
+                # with old and new locale data alike. The module's
+                # own output is left untouched.
+                s/[\x{202F}\x{00A0}]/ /g for $got, $want;
+
                 is(
-                    $dt->strftime($fmt),
-                    $tests->{$fmt},
+                    $got,
+                    $want,
                     "$fmt is $tests->{$fmt}"
                 );
             }
